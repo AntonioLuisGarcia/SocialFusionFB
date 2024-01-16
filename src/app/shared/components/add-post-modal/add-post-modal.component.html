@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "home.newPost" | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">{{"home.close" | translate}}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+
+    <app-image-selectable formControlName="image"></app-image-selectable>
+
+    <ion-item>
+      <ion-label position="floating">{{"login.description" | translate}}</ion-label>
+      <ion-input formControlName="description" type="text"></ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="postForm.get('description')?.invalid && postForm.get('description')?.touched">
+      <p>{{"login.required" | translate}}</p>
+    </ion-text>
+
+    <ion-button expand="block" type="submit" [disabled]="!postForm.valid">{{"home.publish" | translate}}</ion-button>
+
+  </form>
+</ion-content>

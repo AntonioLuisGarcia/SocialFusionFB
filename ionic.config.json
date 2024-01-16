@@ -1,0 +1,7 @@
+{
+  "name": "SocialFusion",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

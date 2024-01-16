@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{"personal.delete" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <p>{{"personal.questionModal" | translate}}</p>
+  <ion-button expand="block" color="danger" (click)="confirmDelete()">{{"personal.delete" | translate}}</ion-button>
+  <ion-button expand="block" (click)="cancelDelete()">{{"personal.cancel" | translate}}</ion-button>
+</ion-content>

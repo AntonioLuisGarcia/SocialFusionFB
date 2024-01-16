@@ -1,0 +1,29 @@
+<ion-content [fullscreen]="true">
+  
+  <div class="container container-margin-top">
+    <ion-card>
+      <ion-card-header>
+        <div class="logo">
+          <ion-thumbnail>
+            <img alt="logo de SocialFusion" src="assets/images/logoSF.png" />
+          </ion-thumbnail>
+          <ion-text> SocialFusion </ion-text>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <app-login-form *ngIf="showLogin" (onsubmit)="onLogin($event)"></app-login-form>
+        <app-create-account-form *ngIf="!showLogin" (onsubmit)="onRegister($event)"></app-create-account-form>
+      </ion-card-content>
+      <div class="ion-text-end"  *ngIf="showLogin">
+        <ion-button fill="clear" (click)="changeLogin()" style="text-transform: none;">{{"login.createAnAcount" | translate}}</ion-button>
+      </div>
+
+      <div class="ion-text-end"  *ngIf="!showLogin">
+        <ion-button fill="clear" (click)="changeLogin()" style="text-transform: none;">{{"login.haveAccount" | translate}}</ion-button>
+      </div>
+    </ion-card>
+  </div>
+  
+  
+</ion-content>

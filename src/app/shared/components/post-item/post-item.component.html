@@ -1,0 +1,43 @@
+<ion-card>
+
+  <div *ngIf="showEditDeleteButtons">
+    <ion-button class="edit-button" (click)="editPost($event)">
+      <ion-icon name="create"></ion-icon> <!-- Icono de editar -->
+    </ion-button>
+    <ion-button class="delete-button" slot="end" (click)="deletePost($event)">
+      <ion-icon name="trash"></ion-icon> <!-- Icono de borrar -->
+    </ion-button>
+  </div>
+
+  
+  <ion-card-header>
+    <ion-card-title>{{ post?.user?.username }}</ion-card-title>
+  </ion-card-header>
+  
+  <img *ngIf="post?.img" [src]="post?.img" alt="Imagen del post" />
+  
+  <ion-card-content>
+    <ion-card-subtitle class="description">{{ post?.description }}</ion-card-subtitle>
+    <ion-card-subtitle class="date">{{ post?.date | formatDate }}</ion-card-subtitle>
+
+    <div class="like-comment-container">
+      <ion-icon
+        class="like-icon"
+        name="thumbs-up"
+        [ngStyle]="{'color': post?.likedByUser ? 'blue' : 'black'}"
+        (click)="like($event)"
+        ></ion-icon>
+  
+      <form class="comment-form" (ngSubmit)="comment($event, commentInput.value)">
+        <input type="text" #commentInput placeholder="{{'home.commentType' | translate}}">
+        <button type="submit" ion-button small>
+          <ion-icon name="send"></ion-icon>
+        </button>
+      </form>
+    </div>
+      <button ion-button small (click)="viewComments($event)">{{"home.showComments" | translate}}</button>
+  </ion-card-content>
+</ion-card>
+  
+
+

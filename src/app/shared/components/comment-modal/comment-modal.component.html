@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{"home.comment" | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Lista de comentarios -->
+  <ion-list>
+    <app-comment-item *ngFor="let comment of comments" [comment]="comment"></app-comment-item>
+  </ion-list>
+</ion-content>

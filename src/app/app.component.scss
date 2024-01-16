@@ -1,0 +1,10 @@
+.rectangular-button {
+    --border-radius: 0; /* Esto hace que los bordes sean rectos */
+    width: 58px; /* Ancho del botón */
+    height: 35px; /* Altura del botón */
+    margin: 10px;
+  }
+  
+  ion-router-outlet {
+    margin-top: 60px; /* Ajusta este valor según lo necesites */
+  }

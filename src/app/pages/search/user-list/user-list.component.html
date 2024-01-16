@@ -1,0 +1,3 @@
+<div class="user-list">
+  <app-user-item *ngFor="let user of users" [user]="user" (onClickUser)="userClicked($event)"></app-user-item>
+</div>

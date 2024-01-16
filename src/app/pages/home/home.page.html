@@ -1,0 +1,22 @@
+<ion-content [fullscreen]="true" class="content-container">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Blank</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="add-post-button" (click)="presentAddPostModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <app-post-list 
+  [posts]="posts"
+  [showEditDeleteButtons]="false"
+  (likePost)="onLikePost($event)"
+  (commentPost)="onCommentPost($event)"
+  (viewComments)="onShowComments($event)"></app-post-list>
+
+
+</ion-content>

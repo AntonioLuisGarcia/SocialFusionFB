@@ -1,0 +1,14 @@
+:host {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .post-list-container {
+    max-width: 600px; /* Ajusta esto según tus necesidades */
+    width: 100%;
+    margin: 20px;
+  }
+  
+  ion-card {
+    margin-bottom: 20px;
+  }

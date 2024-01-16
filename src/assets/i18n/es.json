@@ -1,0 +1,58 @@
+{
+    "login":{
+        "user":"Usuario",
+        "pwd":"Contraseña",
+        "noAccount":"¿Necesitas una cuenta?",
+        "submit":"Acceder",
+        "name":"Nombre Completo",
+        "email":"Email",
+        "pwdRepeat":"Repetir contraseña",
+        "description":"Descripción",
+        "required":"Este campo es obligatorio",
+        "matchPwd":"Las contraseñas no coinciden",
+        "descriptionMaxLeght":"No puede tener mas de 500 caracteres",
+        "createAnAcount":"Crear una cuenta",
+        "passwordProto":"La contraseña debe tener mayusculas, minusculas y numeros",
+        "emailValidation":"Usa un email correcto",
+        "noSpaces":"El nombre de usuario no puede tener espacios",
+        "haveAccount":"Tengo cuenta"
+    },
+
+    "sideBar":{
+        "search":"Buscar",
+        "home":"Inico",
+        "logout":"Cerrar Sesión",
+        "personal":"Perfil"
+    },
+    
+    "home":{
+        "newPost":"Nueva Publicación",
+        "search":"Buscar",
+        "commentType":"Escribe un comentario...",
+        "showComments":"Ver Comentarios",
+        "close":"Cerrar",
+        "publish":"Publicar",
+        "comment":"Comentarios"
+    },
+
+    "personal":{
+        "edit":"Editar Cuenta",
+        "delete":"Borrar Cuenta",
+        "questionModal":"¿Estás seguro de que quieres eliminar tu cuenta permanentemente?",
+        "cancel":"Cancelar",
+        "username":"Nombre de Usuario",
+        "name":"Nombre",
+        "save":"Guardar"
+    },
+
+    "about":{
+        "title":"Contacto",
+        "information":"Soy estudiante de 2º DAM en el CPIFP Alan Turing.",
+        "text":"Este proyecto se basa en una red social, con los funcionamientos basicos, como subir pueblicaciones, dar likes, y comentar.",
+        "socialNetworks":"Redes Sociales"
+    },
+
+    "search":{
+        "noResults":"No hay usuarios con ese nombre"
+    }
+}

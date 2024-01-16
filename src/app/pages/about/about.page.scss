@@ -1,0 +1,17 @@
+ion-card-header.ios {
+    display: flex;
+    flex-flow: column-reverse;
+  }
+  ion-card{
+    text-align: center;
+  }
+  ion-item{
+    text-align: center;
+  }
+ 
+  .small-image {
+    width: 60%; 
+    height: auto; 
+    display: block; 
+    margin: auto; 
+  }

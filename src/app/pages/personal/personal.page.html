@@ -1,0 +1,25 @@
+<ion-content [fullscreen]="true">
+  <app-user-info
+  [user]="actualUser"
+  ></app-user-info>
+
+  <ion-row class="ion-justify-content-center ion-padding">
+    <ion-col size="auto">
+      <ion-button fill="outline" (click)="editProfile()">{{"personal.edit" | translate}}</ion-button>
+    </ion-col>
+    <ion-col size="auto">
+      <ion-button color="danger" (click)="deleteAccount()">{{"personal.delete" | translate}}</ion-button>
+    </ion-col>
+  </ion-row>
+
+  <app-post-list 
+  [posts]="userPosts"  
+  [showEditDeleteButtons]="true"
+  (editPost)="onEditPost($event)"
+  (deletePost)="onDeletePost($event)"
+  (likePost)="onLikePost($event)"
+  (commentPost)="onCommentPost($event)"
+  (viewComments)="onShowComments($event)"
+  ></app-post-list>
+
+</ion-content>

@@ -1,0 +1,14 @@
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{"sideBar.search" | translate}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Barra de búsqueda -->
+  <ion-searchbar [formControl]="searchControl"></ion-searchbar>
+  <app-user-list [users]="filteredUsers" (onClickUser)="userClicked($event)" ></app-user-list>
+  <ion-list class="empty-list"  *ngIf="searched && filteredUsers.length === 0">
+    <ion-item>{{"search.noResults" | translate}}</ion-item>
+  </ion-list>
+</ion-content>

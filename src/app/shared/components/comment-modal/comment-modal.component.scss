@@ -1,0 +1,8 @@
+ion-button {
+    --color: black; // Color predeterminado del botón
+  
+    &:hover {
+      --color: red; // Color del botón al pasar el ratón por encima
+    }
+  }
+  

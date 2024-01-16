@@ -1,0 +1,25 @@
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" (key.enter)="onSubmit()">
+  <ion-item>
+    <ion-input labelPlacement="stacked" label="{{'login.user' | translate}}" formControlName="username" type="text"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('username')?.errors?.['required'] && this.form.controls['username'].touched">
+    {{"login.required" | translate}}
+  </p>
+  <p style='color: red;' *ngIf="form.get('username')?.errors?.['noSpacesInName'] && form.get('username')?.touched">
+    {{"login.matchPwd" | translate}}
+  </p>  
+
+  <ion-item>
+    <ion-input labelPlacement="stacked" label="{{'login.pwd' | translate}}" formControlName="password" type="password"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('password')?.errors?.['required'] && this.form.controls['password'].touched">
+    {{"login.required" | translate}}
+  </p>
+  <p  style='color: red;' *ngIf="this.form.get('password')?.errors?.['minlenght']">
+    {{"login.required" | translate}}
+  </p>
+
+  <div class="ion-text-end">
+    <ion-button style="text-transform: none;" [disabled]="!form.valid" (click)="onSubmit()">{{"login.submit" | translate}}</ion-button>
+  </div>
+</form>

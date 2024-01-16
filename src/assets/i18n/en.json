@@ -1,0 +1,58 @@
+{
+    "login":{
+        "user":"User",
+        "pwd":"Password",
+        "noAccount":"Need an account?",
+        "submit":"Access",
+        "name":"Name",
+        "email":"Email",
+        "pwdRepeat":"Repeat password",
+        "description":"Description",
+        "required":"This field is required", 
+        "matchPwd":"Passwords do not match",
+        "descriptionMaxLeght":"Cannot be more than 500 characters",
+        "createAnAcount":"Create an acount",
+        "passwordProto":"Password must include upper and lower case letters and numbers",
+        "emailValidation":"Type a correct email",
+        "noSpaces":"Username cannot includes spaces",
+        "haveAccount":"I have an account"
+    },
+
+    "sideBar":{
+        "search":"Search",
+        "home":"Home",
+        "logout":"Logout",
+        "personal":"Personal"
+    },
+
+    "home":{
+        "newPost":"New Post",
+        "search":"Search",
+        "commentType":"Type a comment...",
+        "showComments":"Show Comments",
+        "close":"Close",
+        "publish":"Publish",
+        "comment":"Comments"
+    },
+
+    "personal":{
+        "edit":"Edit Account",
+        "delete":"Delete Account",
+        "questionModal":"Are you sure you want to delete your account permanently?",
+        "cancel":"Cancel",
+        "username":"Username",
+        "name":"Name",
+        "save":"Save"
+    },
+
+    "about":{
+        "title":"About",
+        "information":"I am a 2º DAM student at the CPIFP Alan Turing.",
+        "text":"This project is based on a social network, with basic functions, like as uploading posts, giving likes, and commenting.",
+        "socialNetworks":"Social Network"
+    },
+
+    "search":{
+        "noResults":"No results found"
+    }
+}

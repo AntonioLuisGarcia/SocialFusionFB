@@ -1,0 +1,52 @@
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" (key.enter)="onSubmit()">
+  <ion-item>
+    <ion-input labelPlacement="stacked" label='{{"login.name" | translate}}' formControlName="name" type="text"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('name')?.errors?.['required'] && this.form.controls['name'].touched">
+    {{"login.required" | translate}}
+  </p>
+
+  <ion-item>
+    <ion-input labelPlacement="stacked" label='{{"login.user" | translate}}' formControlName="username" type="text"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('username')?.errors?.['required'] && this.form.controls['username'].touched">
+    {{"login.required" | translate}}
+  </p>
+  <p style='color: red;' *ngIf="this.form.get('username')?.errors?.['noSpacesAllowed'] && this.form.controls['username'].touched">
+    {{"login.noSpaces" | translate}}
+  </p>
+
+  <ion-item>
+    <ion-input labelPlacement="stacked" label='{{"login.email" | translate}}' formControlName="email" type="email"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('email')?.errors?.['required'] && this.form.controls['email'].touched">
+    {{"login.required" | translate}}
+  </p>
+  <p  style='color: red;' *ngIf="this.form.get('email')?.errors?.['email'] && this.form.controls['email'].touched">
+    {{"login.emailValidation" | translate}}
+  </p>
+
+  <ion-item>
+    <ion-input labelPlacement="stacked" label='{{"login.pwd" | translate}}' formControlName="password" type="password"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('password')?.errors?.['required'] && this.form.controls['password'].touched">
+    {{"login.required" | translate}}
+  </p>
+  <p  style='color: red;' *ngIf="this.form.get('password')?.errors?.['passwordProto']">
+    {{"login.passwordProto" | translate}}
+  </p>
+
+  <ion-item>
+    <ion-input labelPlacement="stacked" label='{{"login.pwdRepeat" | translate}}' formControlName="passwordRepeat" type="password"></ion-input>
+  </ion-item>
+  <p  style='color: red;' *ngIf="this.form.get('passwordRepeat')?.errors?.['required'] && this.form.controls['passwordRepeat'].touched">
+    {{"login.required" | translate}}
+  </p>
+  <p style='color: red;' *ngIf="this.form.get('passwordRepeat')?.errors?.['passwordMatch'] && form.get('passwordRepeat')?.touched">
+    {{"login.matchPwd" | translate}}
+  </p>
+
+  <div class="ion-text-end">
+    <ion-button style="text-transform: none;" [disabled]="!form.valid" (click)="onSubmit()">{{"login.submit" | translate}}</ion-button>
+  </div>
+</form>

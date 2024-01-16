@@ -1,0 +1,40 @@
+<ion-app>
+    <ion-menu  *ngIf="this.user" #menu contentId="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="menu.close()"><ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
+          </ion-buttons>
+          <ion-title>@{{user.username}}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-item appHoverColor (click)="menu.close()" [routerLink]="['/home']" button detail="false">
+            <ion-icon slot="start" name="home"></ion-icon>
+            <ion-label>{{"sideBar.home" | translate}}</ion-label>
+          </ion-item>
+
+          <ion-item appHoverColor (click)="menu.close()" [routerLink]="['/personal']" button detail="false">
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            <ion-label>{{"sideBar.personal" | translate}}</ion-label>
+          </ion-item>
+          
+          <ion-item appHoverColor (click)="menu.close()" [routerLink]="['/search']" button detail="false">
+            <ion-icon slot="start" name="search"></ion-icon>
+            <ion-label>{{"sideBar.search" | translate}}</ion-label>
+          </ion-item>
+          
+          <ion-item appHoverColor (click)="menu.close()" [routerLink]="['/about']" button detail="false">
+            <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+            <ion-label>{{"about.title" | translate}}</ion-label>
+            
+          </ion-item><ion-item (click)="onSignOut(); menu.close()" color="danger" button detail="false"><ion-icon slot="start" name="log-out-outline"></ion-icon>{{"sideBar.logout" | translate}}</ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <div class="ion-page" id="main-content">
+      <app-header></app-header>
+      <ion-router-outlet></ion-router-outlet>
+    </div>
+  </ion-app>

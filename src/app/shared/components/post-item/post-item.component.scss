@@ -1,0 +1,108 @@
+ion-card {
+    margin-bottom: 20px;
+  }
+  
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  ion-icon {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+
+
+ion-card-header ion-card-subtitle {
+  text-align: left;
+  font-size: 1.5dvi;
+}
+
+ion-card-content ion-icon {
+  color: #666; 
+}
+
+form input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 1em;
+}
+
+
+
+ion-card-header {
+  font-size: 0.8em; 
+}
+
+.date {
+  text-align: right;
+}
+
+
+.like-icon {
+  color: #666; 
+}
+
+
+.comment-form input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 1em;
+}
+
+.like-comment-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.like-icon {
+  margin-right: 10px; 
+}
+
+.comment-form {
+  display: flex;
+  align-items: center;
+}
+
+.comment-form input[type="text"] {
+  flex-grow: 1;
+  margin-right: 10px; 
+}
+
+ion-button[slot="end"] {
+  margin-left: auto;
+}
+
+.edit-button {
+  float: left;
+}
+
+.delete-button {
+  float: right;
+}
+
+ion-card-title {
+  font-size:1.3em; 
+  font-weight: bold;
+}
+
+ion-card {
+  border: 1px solid #a0a0a0; 
+}
+
+.description {
+  font-size: 1.2em;
+}
+
+ion-card img {
+  display: block;
+  margin: auto;
+}
