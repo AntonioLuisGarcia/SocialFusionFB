@@ -5,10 +5,10 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, map, switchMap } from "rxjs";
 
 /// Service
-import { ApiService } from "../api.service";
+import { ApiService } from "../../api.service";
 
 /// Interfaces
-import { Like } from "../../interfaces/like";
+import { Like } from "../../../interfaces/like";
 
 @Injectable({
   providedIn: "root"

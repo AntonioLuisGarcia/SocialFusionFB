@@ -4,9 +4,9 @@ import { ModalController } from '@ionic/angular';
 
 /// Services
 import { AuthService } from 'src/app/core/services/auth.service';
-import { PostService } from 'src/app/core/services/strapi/post.service';
-import { LikeService } from 'src/app/core/services/strapi/like.service';
-import { CommentService } from 'src/app/core/services/strapi/comment.service';
+import { PostService } from 'src/app/core/services/api/strapi/post.service';
+import { LikeService } from 'src/app/core/services/api/strapi/like.service';
+import { CommentService } from 'src/app/core/services/api/strapi/comment.service';
 import { MediaService } from 'src/app/core/services/media.service';
 
 /// Interfaces
@@ -20,6 +20,7 @@ import { CommentModalComponent } from '../../shared/components/comment-modal/com
 
 /// Helpers
 import { dataURLtoBlob } from 'src/app/core/helpers/blob';
+import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,25 @@ import { dataURLtoBlob } from 'src/app/core/helpers/blob';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit{
-  
+
+  constructor(
+    private postService: PostFirebaseService,
+  ){
+
+  }
+
+  posts: PostExtended[] | any;
+  post: PostExtended | any;
+
+  // Al iniciar la página, obtenemos el usuario actual y sus posts
+  async ngOnInit() {
+      // Ahora que tenemos `this.me`, podemos obtener los posts y ordenarlos por fecha
+        this.posts = await this.postService.getAllPost();
+        console.log(this.post)
+        //this.postService.fetchAndEmitPosts(data.id);
+  }
+
+  /*
   constructor(
     private auth:AuthService,
     private postService:PostService,
@@ -131,5 +150,5 @@ export class HomePage implements OnInit{
       })
     }
   }
-
+*/
 }

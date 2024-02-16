@@ -1,43 +1,54 @@
-/// Angular
 import { Injectable } from '@angular/core';
-
-/// Rxjs
-import { BehaviorSubject, Observable, concatMap, map, of} from 'rxjs';
-
-/// Services
-import { ApiService } from '../api.service';
-
-/// Interfaces
-import { Post, PostExtended } from '../../interfaces/post';
+import { FirebaseDocument, FirebaseService } from '../../firebase/firebase.service';
+import { BehaviorSubject, Observable, concatMap, map, of } from 'rxjs';
+import { Post, PostExtended } from 'src/app/core/interfaces/post';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PostService {
+export class PostFirebaseService {
 
   constructor(
-    private api:ApiService,
-    ) { }
+    private fireBaseService: FirebaseService
+    ) {
+    
+   }
 
-  // BehaviorSubject y Observable para notificar los cambios a los suscriptores
+   // BehaviorSubject y Observable para notificar los cambios a los suscriptores
   private _posts:BehaviorSubject<PostExtended[]> = new BehaviorSubject<PostExtended[]>([]);
   public posts$:Observable<PostExtended[]> = this._posts.asObservable();
 
 
-  // Metodo para obtener los post y los likes del usuario actual
+  /*// Metodo para obtener los post y los likes del usuario actual
   public fetchAndEmitPosts(id:number): void {
     this.getPostsForUser(id).subscribe(posts => {
       this._posts.next(posts);
     });
+  }*/
+
+  public async getAllPost(): Promise<PostExtended[]>{
+    const docs: FirebaseDocument[] = await this.fireBaseService.getDocuments("posts");
+    const posts: PostExtended[] = docs.map(doc => {
+        console.log(doc)
+      return {
+        id: 1,
+        description: doc.data['description'],
+        date: doc.data['date'],
+        user: doc.data['user'],
+      };
+  });
+    this._posts.next(posts)
+    return posts;
   }
 
+/*
   // Metodo para obtener los post y los likes del usuario actual
   //Lo usamos tanto para cuando se busca un usuario como para cuando se ve el perfil personal
   //actualUserId es el id del usuario actual con el que sacamos los likes
   //filterUserId es el id del usuario que estamos buscando, de el sacamos sus posts
-  public getPostsByUserId(actualUserId: number, filterUserId: number): Observable<PostExtended[]> {
+  public getPostsByUserId(actualUserId: number, filterUserId: number):  {
     //en la url filtramos por el usuario que estamos buscando, y hacemos populate especifico para sacar los likes y la imagen
-    return this.api.get(`/posts?populate[0]=user&populate[1]=likes.user&populate[2]=image&filters[user]=${filterUserId}`).pipe(
+    /*return this.fireBaseService.get(`/posts?populate[0]=user&populate[1]=likes.user&populate[2]=image&filters[user]=${filterUserId}`).pipe(
       map(response => {
         const posts = response.data.map((item: any) => {
           //Con esto verificamos si hay imagen
@@ -77,14 +88,14 @@ export class PostService {
   // Metodo para actualizar un post
   public updatePost(post: any, userId: number): Observable<PostExtended> {
     // Creamos un objeto con los datos que queremos actualizar
-    const data = {
+   /*const data = {
       data: {
         description: post.description,
         image: post.img
       }};
 
     // Hacemos el put a la api
-    return this.api.put(`/posts/${post.id}`, data).pipe(
+    return this.fireBaseService.put(`/posts/${post.id}`, data).pipe(
       //mapeamos la respuesta
       map((response: any) => {
         let updatedPost = response.data;
@@ -102,34 +113,19 @@ export class PostService {
     );
   }
   
-  /*
-  Metodo no usado ya que no se puede hacer patch en Strapi
-
-  public patchPost(post: PostExtended): Observable<PostExtended> {
-    return this.api.patch(`/posts/${post.id}`, post).pipe(
-      map((updatedPost: PostExtended) => {
-        // Actualizamos la lista de posts con el post actualizado
-        const posts = this._posts.value.map(p => p.id === post.id ? updatedPost : p);
-        this._posts.next(posts);
-  
-        return updatedPost;
-      })
-    );
-  }
-  */
-  
-
   // Metodo para crear un post
-  public postPost(post: Post): Observable<PostExtended> {
+  public postPost(post: Post): Observable<any> {
+    throw new Error('Method not implemented.');
+  }
     // Creamos un objeto con los datos que queremos crear
-    const body = {
+    /*const body = {
       data: { 
         description: post.description,
         image: post.img,
         user: post.userId
       }
     };
-    return this.api.post("/posts", body).pipe(
+    return this.fireBaseService.post("/posts", body).pipe(
       // Utiliza concatMap para seguir el orden de emisión
       concatMap((newPost: PostExtended) => {
         // Primero, actualizamos la lista de posts
@@ -139,26 +135,28 @@ export class PostService {
         // Luego, devolvemos un observable que emite el nuevo post
         return of(newPost);
       })
-    );
-  }
+    }
+    );*/
 
   //Con este metodo borramos un post
-  public deletePost(postId:number):Observable<any>{
-    return this.api.delete(`/posts/${postId}`).pipe(
+  public deletePost(postId:number): Observable<any> {
+    throw new Error('Method not implemented.');
+  }
+    /*return this.fireBaseService.delete(`/posts/${postId}`).pipe(
       map(() => {
         // Actualizamos la lista de posts quitando al post eliminado
         const updatedPosts = this._posts.value.filter(post => post.id !== postId);
         this._posts.next(updatedPosts);
       })
+    }
     );
-  }
 
   //Con este metodo obtenemos los posts del home de un suario y sus likes
-  public getPostsForUser(userId: number): Observable<PostExtended[]> {
+  public getPostsForUser(userId: number):  {
     //Hacenos un populate espefico para sacar los likes y la imagen
-    const url = `/posts?populate[0]=user&populate[1]=likes.user&populate[2]=image`;
+    /*const url = `/posts?populate[0]=user&populate[1]=likes.user&populate[2]=image`;
     //Hacemos el get y mapeamos los resultados
-    return this.api.get(url).pipe(
+    return this.fireBaseService.get(url).pipe(
       map(response => {
         const posts = response.data.map((item: any) => {
           //Con esto verificamos si hay imagen
@@ -206,5 +204,6 @@ export class PostService {
   
     // emitimos la nueva lista de posts en el Observable _posts.
     this._posts.next(updatedPosts);
-  }
+  }*/
 }
+

@@ -2,15 +2,15 @@
 import { Observable, lastValueFrom, map, tap } from 'rxjs';
 
 /// Service
-import { AuthService } from '../auth.service';
-import { JwtService } from '../jwt.service';
-import { ApiService } from '../api.service';
+import { AuthService } from '../../auth.service';
+import { JwtService } from '../../jwt.service';
+import { ApiService } from '../../api.service';
 
 /// Interfaces
-import { StrapiLoginPayload, StrapiLoginResponse, StrapiRegisterPayload, StrapiRegisterResponse } from '../../interfaces/strapi';
-import { UserCredentials } from '../../interfaces/UserCredentials';
-import { UserRegister } from '../../interfaces/UserRegister';
-import { User, UserBasicInfo, UserExtended } from '../../interfaces/User';
+import { StrapiLoginPayload, StrapiLoginResponse, StrapiRegisterPayload, StrapiRegisterResponse } from '../../../interfaces/strapi';
+import { UserCredentials } from '../../../interfaces/UserCredentials';
+import { UserRegister } from '../../../interfaces/UserRegister';
+import { User, UserBasicInfo, UserExtended } from '../../../interfaces/User';
 
 export class AuthStrapiService extends AuthService{
 
@@ -177,6 +177,7 @@ export class AuthStrapiService extends AuthService{
           username: user.username,
           email: user.email,
           description: user.description,
+          password: user.password,
           img: imageUrl
         };
       })

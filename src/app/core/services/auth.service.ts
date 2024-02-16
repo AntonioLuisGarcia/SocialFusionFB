@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable} from 'rxjs';
 
 // Interfaces
-import { UserExtended } from '../interfaces/User';
+import { User, UserExtended } from '../interfaces/User';
 
 
 @Injectable({
@@ -15,6 +15,9 @@ export abstract class AuthService {
 
   protected _logged = new BehaviorSubject<boolean>(false);
   public isLogged$ = this._logged.asObservable();
+
+  protected _user = new BehaviorSubject<User|null>(null);
+  public user$ = this._user.asObservable();
 
   // BehaviorSubject para almacenar el estado de autenticación del usuario
   protected _currentUser: BehaviorSubject<UserExtended | null> = new BehaviorSubject<UserExtended | null>(null);

@@ -1,9 +1,10 @@
 export interface UserExtended{
     id:number,
+    uuid?:string,
     name:string,
     username:string,
     email:string,
-    password?:string,
+    password:string,// revisar este nulable
     description?:string,
     img?:string,
 }

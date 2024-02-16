@@ -6,6 +6,7 @@ export interface Post{
 
 export interface PostExtended {
     id: number;
+    uuid?:string;
     description: string;
     img?: string;
     date: string;

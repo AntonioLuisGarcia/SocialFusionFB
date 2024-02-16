@@ -5,18 +5,23 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <!--<ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button class="add-post-button" (click)="presentAddPostModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <app-post-list 
-  [posts]="posts"
-  [showEditDeleteButtons]="false"
+  
   (likePost)="onLikePost($event)"
   (commentPost)="onCommentPost($event)"
-  (viewComments)="onShowComments($event)"></app-post-list>
+  (viewComments)="onShowComments($event)"
+-->
+  <app-post-list 
+  [posts]="posts"
+  [showEditDeleteButtons]="false"></app-post-list>
+  
+  <p>Hola</p>
+  <p>{{posts.description}}</p>
 
 
 </ion-content>

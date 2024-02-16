@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 /// Service
-import { MediaService } from '../media.service';
-import { ApiService } from '../api.service';
+import { MediaService } from '../../media.service';
+import { ApiService } from '../../api.service';
 
 /// Interfaces
-import { StrapiUploadResponse } from '../../interfaces/StrapiMedia';
+import { StrapiUploadResponse } from '../../../interfaces/StrapiMedia';
 
 @Injectable({
   providedIn: 'root'

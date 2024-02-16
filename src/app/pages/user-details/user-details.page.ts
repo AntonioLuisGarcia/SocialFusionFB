@@ -4,9 +4,9 @@ import { ModalController } from '@ionic/angular';
 
 /// Services
 import { AuthService } from 'src/app/core/services/auth.service';
-import { LikeService } from 'src/app/core/services/strapi/like.service';
-import { PostService } from 'src/app/core/services/strapi/post.service';
-import { CommentService } from 'src/app/core/services/strapi/comment.service';
+import { LikeService } from 'src/app/core/services/api/strapi/like.service';
+import { PostService } from 'src/app/core/services/api/strapi/post.service';
+import { CommentService } from 'src/app/core/services/api/strapi/comment.service';
 
 /// Components
 import { CommentModalComponent } from 'src/app/shared/components/comment-modal/comment-modal.component';

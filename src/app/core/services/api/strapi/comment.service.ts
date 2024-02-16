@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map} from 'rxjs';
 
 ///Service
-import { ApiService } from '../api.service';
+import { ApiService } from '../../api.service';
 
 /// Interface
 import { CommentWithUserName, Comment } from 'src/app/core/interfaces/comment';
