@@ -21,6 +21,7 @@ import { CommentModalComponent } from '../../shared/components/comment-modal/com
 /// Helpers
 import { dataURLtoBlob } from 'src/app/core/helpers/blob';
 import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
+import { AuthStrapiService } from 'src/app/core/services/api/strapi/auth-strapi.service';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +32,9 @@ export class HomePage implements OnInit{
 
   constructor(
     private postService: PostFirebaseService,
+    private authService: AuthService,
+    public modalController: ModalController,
+    private mediaService: MediaService,
   ){
 
   }
@@ -39,11 +43,74 @@ export class HomePage implements OnInit{
   post: PostExtended | any;
 
   // Al iniciar la página, obtenemos el usuario actual y sus posts
-  async ngOnInit() {
-      // Ahora que tenemos `this.me`, podemos obtener los posts y ordenarlos por fecha
-        this.posts = await this.postService.getAllPost();
-        console.log(this.post)
-        //this.postService.fetchAndEmitPosts(data.id);
+  ngOnInit() {
+    this.postService.getAllPost().subscribe((posts) => {
+      this.posts = posts;
+      console.log('Posts actualizados:', this.posts);
+    }, (error) => {
+      console.error('Error al obtener posts:', error);
+    });
+  }
+
+   // Al hacer click en el botón de añadir post, llamamos al modal de añadir post
+   async presentAddPostModal() {
+    const modal = await this.modalController.create({
+      component: AddPostModalComponent
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data && data.status === 'ok') {
+      // Convertir la imagen a blob
+      if(data.post.image){
+        dataURLtoBlob(data.post.image, (blob:Blob)=>{
+          this.mediaService.upload(blob).subscribe((media:number[])=>{
+            // Obtener detalles del usuario
+      this.authService.me().subscribe(
+        user => {
+          //Cogemos la url de la imagen
+          const imageUrl = media.length > 0 ? media[0] : null;
+          // Creamos el nuevo post
+          const newPost: any = {
+            img: imageUrl,
+            description: data.post.description,
+            userId: user.id
+          };
+        this.postService.createPost(newPost).subscribe({
+          next: () => {
+            console.log("Creado:",newPost)
+          },
+          error: (error) => {
+            console.error('Error al crear el post', error);
+          }
+        });
+      });
+        })
+      })
+    }else{
+      this.authService.me().subscribe(
+        user => {
+          // Creamos el nuevo post
+          const newPost: any = {
+            img: null,
+            description: data.post.description,
+            user: {
+              uuid: user.uuid,
+              name: user.name,
+              //Completar si es necesario
+            }
+          };
+        this.postService.createPost(newPost).subscribe({
+          next: () => {
+            this.postService.getAllPost().subscribe()
+            console.log("Creado:",newPost)
+          },
+          error: (error) => {
+            console.error('Error al crear el post', error);
+          }
+        });
+      });
+    }
+    }
   }
 
   /*

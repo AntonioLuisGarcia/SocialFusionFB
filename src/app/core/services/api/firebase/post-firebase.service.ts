@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirebaseDocument, FirebaseService } from '../../firebase/firebase.service';
-import { BehaviorSubject, Observable, concatMap, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, concatMap, from, map, of, switchMap } from 'rxjs';
 import { Post, PostExtended } from 'src/app/core/interfaces/post';
+import { AuthService } from '../../auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import { Post, PostExtended } from 'src/app/core/interfaces/post';
 export class PostFirebaseService {
 
   constructor(
-    private fireBaseService: FirebaseService
+    private fireBaseService: FirebaseService,
+    private authService: AuthService,
     ) {
     
    }
@@ -26,19 +28,72 @@ export class PostFirebaseService {
     });
   }*/
 
-  public async getAllPost(): Promise<PostExtended[]>{
-    const docs: FirebaseDocument[] = await this.fireBaseService.getDocuments("posts");
-    const posts: PostExtended[] = docs.map(doc => {
-        console.log(doc)
-      return {
-        id: 1,
-        description: doc.data['description'],
-        date: doc.data['date'],
-        user: doc.data['user'],
-      };
-  });
-    this._posts.next(posts)
-    return posts;
+  getAllPost(): Observable<PostExtended[]> {
+    return from(this.fireBaseService.getDocuments("posts")).pipe(
+      switchMap((docs: FirebaseDocument[]) => {
+        const posts: PostExtended[] = docs.map(doc => {
+          return {
+            id: 1,
+            uuid: doc.id,
+            description: doc.data['description'],
+            date: doc.data['date'],
+            user: doc.data['user'],
+          };
+        });
+        this._posts.next(posts);
+        return of(posts);
+      })
+    );
+  }
+
+  public createPost(post: PostExtended): Observable<PostExtended[]>{
+    return new Observable<PostExtended[]>(observer => {
+      post.date = this.transformDate();
+      console.log(post.date)
+      if (post.user?.uuid || post.user?.uuid !== undefined) {
+          this.fireBaseService.createDocument("posts", post)
+          .then(() => {
+              const currentPosts = this._posts.getValue();
+              const newPosts = ([...currentPosts, post])
+              this._posts.next(newPosts);  
+              observer.next(newPosts);
+              observer.complete();
+          })
+          .catch(error => {
+              observer.error(error);
+          });
+      } else {
+          observer.error("Error en la creación del post");
+      }
+      });
+  }
+
+  //posible helper
+  transformDate(): string {
+    const date = new Date();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque getMonth() retorna 0-11
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  public getOwnPost(uuid:string):Observable<PostExtended[]>{
+    return from(this.fireBaseService.getDocumentsBy("posts", "user.uuid", uuid)).pipe(
+      switchMap((docs: FirebaseDocument[]) => {
+        const posts: PostExtended[] = docs.map(doc => {
+          return {
+            id: 1,
+            uuid: doc.id,
+            description: doc.data['description'],
+            date: doc.data['date'],
+            user: doc.data['user'],
+          };
+        });
+        this._posts.next(posts);
+        console.log(posts);
+        return of(posts);
+      })
+    );
   }
 
 /*
@@ -136,7 +191,7 @@ export class PostFirebaseService {
         return of(newPost);
       })
     }
-    );*/
+    );
 
   //Con este metodo borramos un post
   public deletePost(postId:number): Observable<any> {

@@ -12,6 +12,7 @@ export interface PostExtended {
     date: string;
     user: {
       id: number;
+      uuid?:string;
       username: string;
       name?: string;
     };

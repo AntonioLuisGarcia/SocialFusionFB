@@ -23,6 +23,7 @@ import { HoverColorDirective } from './shared/directives/hover-color.directive';
 import { FirebaseService } from './core/services/firebase/firebase.service';
 import { AuthFirebaseService } from './core/services/api/firebase/auth-firebase.service';
 import { environment } from 'src/environments/environment';
+import { MediaFirebaseService } from './core/services/api/firebase/media-firebase.service';
 
 export function httpProviderFactory(
   http:HttpClient,
@@ -49,10 +50,13 @@ export function AuthServiceFactory(
 
 export function MediaServiceFactory(
   backend:string,
-  api:ApiService){
+  api:ApiService,
+  firebase:FirebaseService){
     switch(backend){
       case 'Strapi':
         return new MediaStrapiService(api);
+      case 'Firebase':
+        return new MediaFirebaseService(firebase)
       default:
         throw new Error("Not implemented");
     }
@@ -84,7 +88,7 @@ export function MediaServiceFactory(
             useFactory: AuthServiceFactory,
         }, {
             provide: MediaService,
-            deps: ['backend', ApiService],
+            deps: ['backend', ApiService, FirebaseService],
             useFactory: MediaServiceFactory,
         }
     ],

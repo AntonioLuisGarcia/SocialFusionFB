@@ -3,6 +3,12 @@
   [user]="actualUser"
   ></app-user-info>
 
+  <app-post-list
+  
+  [posts]="userPosts"  >
+
+  </app-post-list>
+<!--
   <ion-row class="ion-justify-content-center ion-padding">
     <ion-col size="auto">
       <ion-button fill="outline" (click)="editProfile()">{{"personal.edit" | translate}}</ion-button>
@@ -20,6 +26,6 @@
   (likePost)="onLikePost($event)"
   (commentPost)="onCommentPost($event)"
   (viewComments)="onShowComments($event)"
-  ></app-post-list>
+  ></app-post-list>  -->
 
 </ion-content>

@@ -23,7 +23,8 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 /// Helpers
 import { dataURLtoBlob } from 'src/app/core/helpers/blob';
-import { switchMap } from 'rxjs';
+import { map, switchMap } from 'rxjs';
+import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
 
 @Component({
   selector: 'app-personal',
@@ -35,6 +36,48 @@ export class PersonalPage implements OnInit {
   userPosts: PostExtended[] | any;
   actualUser: UserExtended | any;
 
+  constructor(
+    private authService:AuthService,
+    private postService:PostFirebaseService,
+    private likeService:LikeService,
+    private mediaService: MediaService,
+    private commentService:CommentService,
+    private modalController:ModalController,
+    private router:Router,
+  ) { }
+
+  ngOnInit() {
+    // Nos suscribimos al usuario actual
+    this.authService.me().subscribe(data => {
+      let uuid = data.uuid;
+      if (uuid) {
+        this.postService.getOwnPost(uuid).subscribe(userPosts => {
+          this.userPosts = userPosts;
+          console.log(this.userPosts);
+        });
+      }
+    });
+  }
+
+
+    /**
+     * 
+
+    // Nos suscribimos a los posts y los ordenamos por fecha
+    this.postService.posts$.subscribe(posts => {
+      if (this.actualUser) {
+        this.userPosts = posts.filter((post: PostExtended) => post.user?.id === this.actualUser.id);
+        this.userPosts.sort((a: PostExtended, b: PostExtended) => {
+          let dateA = new Date(a.date);
+          let dateB = new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
+        });
+      }
+    });
+  }
+
+
+  /*
   constructor(
     private authService:AuthService,
     private postService:PostService,
@@ -50,6 +93,14 @@ export class PersonalPage implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.actualUser = user;
     });
+
+
+    /**
+     * this.authService.me().pipe(map(data =>{
+        let uuid = data.uuid;
+        
+      }))
+     
 
     // Nos suscribimos a los posts y los ordenamos por fecha
     this.postService.posts$.subscribe(posts => {
@@ -264,4 +315,6 @@ export class PersonalPage implements OnInit {
       console.log("No")
     }
   }
+
+  */
 }
