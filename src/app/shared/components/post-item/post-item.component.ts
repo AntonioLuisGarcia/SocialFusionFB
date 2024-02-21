@@ -23,9 +23,9 @@ export class PostItemComponent  implements OnInit {
 
   @Output() onLikePost: EventEmitter<number> = new EventEmitter<number>();
   @Output() onCommentPost: EventEmitter<Comment> = new EventEmitter<Comment>();
-  @Output() onViewComments: EventEmitter<number> = new EventEmitter<number>();
+  @Output() onViewComments: EventEmitter<string> = new EventEmitter<string>();
   @Output() onEditPost: EventEmitter<PostExtended> = new EventEmitter<PostExtended>();
-  @Output() onDeletePost: EventEmitter<number> = new EventEmitter<number>();
+  @Output() onDeletePost: EventEmitter<string> = new EventEmitter<string>();
   
   constructor() { }
 
@@ -41,8 +41,8 @@ export class PostItemComponent  implements OnInit {
 
   //Si quieren ver los comentarios, debemos abrir el modal
   viewComments(event:any) {
-    if (this.post && this.post.id) { //Comprobamos que existen
-      this.onViewComments.emit(this.post.id);
+    if (this.post && this.post.uuid) { //Comprobamos que existen
+      this.onViewComments.emit(this.post.uuid);
     }
     event.stopPropagation();
   }
@@ -52,7 +52,7 @@ export class PostItemComponent  implements OnInit {
     if(this.post && this.post.id){
       this.onCommentPost.emit({
         text: comment,
-        postId: this.post.id,
+        postUuid: this.post.uuid,
         // Incluye cualquier otra propiedad necesaria
       });
       this.commentInput!.nativeElement.value = '';
@@ -61,7 +61,7 @@ export class PostItemComponent  implements OnInit {
   }
 
   editPost(event:any) {
-    if(this.post && this.post.id){
+    if(this.post && this.post.uuid){
       this.onEditPost.emit(this.post);
       console.log(this.post)
     }
@@ -69,8 +69,8 @@ export class PostItemComponent  implements OnInit {
   }
 
   deletePost(event:any) {
-    if(this.post && this.post.id){
-      this.onDeletePost.emit(this.post.id);
+    if(this.post && this.post.uuid){
+      this.onDeletePost.emit(this.post.uuid);
     }
     event.stopPropagation();
   }

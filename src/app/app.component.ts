@@ -22,6 +22,7 @@ export class AppComponent {
       if(logged){
       this.auth.me().subscribe(data=>{
         this.user = data;
+        console.log(data)
       });
         this.router.navigate(['/home']);
       }});

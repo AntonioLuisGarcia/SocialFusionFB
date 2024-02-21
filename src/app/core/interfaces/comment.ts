@@ -1,7 +1,13 @@
+import { UserExtended } from "./User";
+
 export interface Comment {
+    uuid?:string;
     text: string;
-    postId: number;
+    postUuid?:string;
+    userUuid?:string;
+    postId?: number;
     userId?: number;
+    user?: UserExtended;
 }
 
 export interface CommentExtended{
@@ -14,5 +20,5 @@ export interface CommentExtended{
 export interface CommentWithUserName {
     text: string;
     postId: number;
-    user?: string;
+    user?: any;
 }

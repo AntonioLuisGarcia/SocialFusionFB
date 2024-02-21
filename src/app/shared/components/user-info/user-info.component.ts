@@ -15,6 +15,8 @@ export class UserInfoComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.user)
+  }
 
 }

@@ -101,9 +101,9 @@ export class AuthFirebaseService extends AuthService{
       return from(this.firebaseSvc.getDocument('users', this.firebaseSvc.user.uid)).pipe(map(data=>{
         return {
           name:data.data['name'],
-          surname:data.data['surname'],
-          nickname:data.data['nickname'],
-          picture:data.data['picture']??"",
+          email:data.data['email'],
+          username:data.data['username'],
+          img:data.data['img']??"",
           uuid:data.id
         }
     }));

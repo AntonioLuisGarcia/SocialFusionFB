@@ -20,6 +20,11 @@ export interface FirebaseUserCredential{
     user:UserCredential
 }
 
+export interface FirebaseSearchCondition {
+  field: string;
+  value: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -191,6 +196,32 @@ export class FirebaseService {
         const querySnapshot = await getDocs(q);
         resolve(querySnapshot.docs.map<FirebaseDocument>(doc=>{
             return {id:doc.id, data:doc.data()}}));
+    });
+  }
+
+  // Método actualizado para aceptar múltiples condiciones
+  public getDocumentsWithConditions(collectionName: string, conditions: FirebaseSearchCondition[]): Promise<FirebaseDocument[]> {
+    return new Promise(async (resolve, reject) => {
+      if (!this._db) {
+        reject({
+          msg: "Database is not connected"
+        });
+      }
+  
+      try {
+        let collectionRef = collection(this._db!, collectionName);
+  
+        const conditionsArray = conditions.map(condition => where(condition.field, '==', condition.value));
+        const finalQuery = query(collectionRef, ...conditionsArray);
+  
+        const querySnapshot = await getDocs(finalQuery);
+  
+        resolve(querySnapshot.docs.map<FirebaseDocument>(doc => {
+          return { id: doc.id, data: doc.data() };
+        }));
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 

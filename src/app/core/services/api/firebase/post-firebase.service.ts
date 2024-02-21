@@ -96,6 +96,51 @@ export class PostFirebaseService {
     );
   }
 
+  //Con este metodo borramos un post
+  public deletePost(uuid:string): Observable<any> {
+    return new Observable<void>(observer =>{
+      if(uuid){
+          this.fireBaseService.deleteDocument("posts", uuid).then(()=>{
+          // Elimina el lugar de la lista de places
+          const currentPlaces = this._posts.getValue().filter(p => p.uuid !== uuid);
+          this._posts.next(currentPlaces);
+              observer.next();
+              observer.complete();
+          })
+          .catch(error => {
+              observer.error(error);
+          });
+      } else {
+          observer.error("Error en la creación del sitio");
+      }
+  })
+  }
+
+  // Metodo para actualizar un post
+  public updatePost(post: any, uuid: string): Observable<PostExtended> {
+    // Creamos un objeto con los datos que queremos actualizar
+    return new Observable<any>(observer =>{
+      if(uuid){
+          this.fireBaseService.updateDocument("posts", uuid,{
+              description:post.description,
+              img:post.img
+          }).then(()=>{
+              // Actualiza el lugar en la lista de places
+              const currentPlaces = this._posts.getValue().map(p => p.uuid === uuid ? post : p);
+              this._posts.next(currentPlaces);
+              observer.next();
+              observer.complete();
+          })
+          .catch(error => {
+              observer.error(error);
+          });
+      } else {
+          observer.error("Error en la creación del sitio");
+      }
+  });
+  }
+
+
 /*
   // Metodo para obtener los post y los likes del usuario actual
   //Lo usamos tanto para cuando se busca un usuario como para cuando se ve el perfil personal

@@ -14,7 +14,9 @@ export class CommentItemComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.comment)
+  }
 
 }
 

@@ -16,10 +16,10 @@ export class PostListComponent  implements OnInit {
   @Input() showEditDeleteButtons: boolean = false;
 
   @Output() editPost = new EventEmitter<PostExtended>();
-  @Output() deletePost = new EventEmitter<number>();
+  @Output() deletePost = new EventEmitter<string>();
   
   @Output() likePost = new EventEmitter<number>();
-  @Output() viewComments = new EventEmitter<number>();
+  @Output() viewComments = new EventEmitter<string>();
   @Output() commentPost = new EventEmitter<Comment>();
 
   constructor() { }
@@ -30,8 +30,8 @@ export class PostListComponent  implements OnInit {
     this.likePost.emit(postId);
   }
 
-  onViewComments(postId: number) {
-    this.viewComments.emit(postId);
+  onViewComments(postUuid: string | undefined) {
+    this.viewComments.emit(postUuid);
   }
 
   onCommentPost(comment: Comment) {
@@ -44,7 +44,7 @@ export class PostListComponent  implements OnInit {
     this.editPost.emit(post);
   }
 
-  onDeletePost(postId: number) {
-    this.deletePost.emit(postId);
+  onDeletePost(uuid: string) {
+    this.deletePost.emit(uuid);
   }
 }

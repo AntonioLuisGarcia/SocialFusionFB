@@ -22,6 +22,8 @@ import { CommentModalComponent } from '../../shared/components/comment-modal/com
 import { dataURLtoBlob } from 'src/app/core/helpers/blob';
 import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
 import { AuthStrapiService } from 'src/app/core/services/api/strapi/auth-strapi.service';
+import { CommentFirebaseService } from 'src/app/core/services/api/firebase/comment-firebase.service';
+import { LikeFirebaseService } from 'src/app/core/services/api/firebase/like-firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -35,6 +37,8 @@ export class HomePage implements OnInit{
     private authService: AuthService,
     public modalController: ModalController,
     private mediaService: MediaService,
+    private commentService: CommentFirebaseService,
+    private likeService: LikeFirebaseService
   ){
 
   }
@@ -44,6 +48,11 @@ export class HomePage implements OnInit{
 
   // Al iniciar la página, obtenemos el usuario actual y sus posts
   ngOnInit() {
+
+    this.likeService.checkLike("GBpRa5i5eVJL8rzzsgPm", "3aTcZrO9gPN5JYB0f7r4v5lYLyV2").subscribe((result: boolean) => {
+      console.log('¿Le gustó al usuario?', result);
+    });
+
     this.postService.getAllPost().subscribe((posts) => {
       this.posts = posts;
       console.log('Posts actualizados:', this.posts);
@@ -73,7 +82,12 @@ export class HomePage implements OnInit{
           const newPost: any = {
             img: imageUrl,
             description: data.post.description,
-            userId: user.id
+            user: {
+              uuid: user.uuid,
+              name: user.name,
+              username: user.username,
+              //Completar si es necesario
+            }
           };
         this.postService.createPost(newPost).subscribe({
           next: () => {
@@ -96,6 +110,7 @@ export class HomePage implements OnInit{
             user: {
               uuid: user.uuid,
               name: user.name,
+              username: user.username,
               //Completar si es necesario
             }
           };
@@ -111,6 +126,29 @@ export class HomePage implements OnInit{
       });
     }
     }
+  }
+
+    // Cuando se hace click en el botón de comentar, llamamos al servicio de comentarios, para crearlo
+    onCommentPost(comment:Comment){
+      console.log(comment)
+      this.authService.me().subscribe((data) =>{
+          comment.user = data
+          this.commentService.createComment(comment).subscribe()  
+      })    
+    }
+
+      // Al hacer click en el botón de mostrar comentarios, llamamos al servicio de comentarios, para obtenerlos
+  async onShowComments(postUuid: string) {
+    this.commentService.getCommentForPost(postUuid).subscribe(async (comments) => {
+      const modal = await this.modalController.create({
+        component: CommentModalComponent,
+        componentProps: {
+          'postUuid': postUuid,
+          'comments': comments // Pasamos los comentarios como propiedad al modal
+        }
+      });
+      await modal.present();
+    });
   }
 
   /*

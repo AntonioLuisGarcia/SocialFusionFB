@@ -18,7 +18,11 @@
 -->
   <app-post-list 
   [posts]="posts"
-  [showEditDeleteButtons]="false"></app-post-list>
+  [showEditDeleteButtons]="false"
+  (commentPost)="onCommentPost($event)"
+  (viewComments)="onShowComments($event)"
+  >
+</app-post-list>
   
   <p>Hola</p>
   <p>{{posts.description}}</p>

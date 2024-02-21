@@ -13,6 +13,8 @@ import { CommentModalComponent } from 'src/app/shared/components/comment-modal/c
 
 /// Interfaces
 import { Comment } from 'src/app/core/interfaces/comment';
+import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
+import { CommentFirebaseService } from 'src/app/core/services/api/firebase/comment-firebase.service';
 
 @Component({
   selector: 'app-user-details',
@@ -25,10 +27,10 @@ export class UserDetailsPage implements OnInit {
   posts: any;
 
   constructor(
-    private postService:PostService,
+    private postService:PostFirebaseService,
     private authService:AuthService,
     private likeService: LikeService,
-    private commentService: CommentService,
+    private commentService: CommentFirebaseService,
     private modalController:ModalController,
   ) { }
 
@@ -41,13 +43,13 @@ export class UserDetailsPage implements OnInit {
         this.posts = posts;
       });
       // Cogemos los post de ese usuario y los likes del usuario actual, y los ordenamos por fecha
-      this.postService.getPostsByUserId(data.id, this.user.id).subscribe(posts => {
+      /*this.postService.getPostsByUserId(data.id, this.user.id).subscribe(posts => {
         this.posts = posts.sort((a, b) => {
           let dateA = new Date(a.date);
           let dateB = new Date(b.date);
           return dateB.getTime() - dateA.getTime();
         });
-      });
+      });*/
     });  
   }
 
@@ -55,7 +57,7 @@ export class UserDetailsPage implements OnInit {
   onLikePost(postId: number) {
     this.authService.me().subscribe((data) => {
       this.likeService.onLike(postId, data.id).subscribe({
-        next: (response) => {
+        next: (response) => {/*
           // Actualizar el estado del like en el servicio
           this.postService.updatePostLike(postId, response.like);
           
@@ -68,8 +70,8 @@ export class UserDetailsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error al cambiar el estado del like', error);
-        }
-      });
+        */}
+      })
     });
   }
   
@@ -78,18 +80,18 @@ export class UserDetailsPage implements OnInit {
     this.authService.me().subscribe((data) =>{
       // Con el mensaje y el id del usuario, creamos el comentario, junto con el id del post
         comment.userId = data.id
-        this.commentService.addComment(comment).subscribe()  
+        this.commentService.createComment(comment).subscribe()  
     })    
   }
   
   // Mostramos los comentarios de un post
-  async onShowComments(postId: number) {
+  async onShowComments(postUuid: string) {
     // Obtenemos los comentarios del post por su id y los mostramos en un modal
-    this.commentService.getCommentForPots(postId).subscribe(async (comments) => {
+    this.commentService.getCommentForPost(postUuid).subscribe(async (comments) => {
       const modal = await this.modalController.create({
         component: CommentModalComponent,
         componentProps: {
-          'postId': postId,
+          'postUuid': postUuid,
           'comments': comments // Pasamos los comentarios como propiedad al modal
         }
       });
