@@ -21,7 +21,7 @@ export class PostItemComponent  implements OnInit {
   @Input() post:PostExtended | null = null; //Uso el PostExtended para tener el id y poder usarlo en los eventos
   @Input() user:UserExtended | null = null; //Puedo usar solo user porque el username no se puede repetir, y con eso ya podria buscarlo
 
-  @Output() onLikePost: EventEmitter<number> = new EventEmitter<number>();
+  @Output() onLikePost: EventEmitter<string> = new EventEmitter<string>();
   @Output() onCommentPost: EventEmitter<Comment> = new EventEmitter<Comment>();
   @Output() onViewComments: EventEmitter<string> = new EventEmitter<string>();
   @Output() onEditPost: EventEmitter<PostExtended> = new EventEmitter<PostExtended>();
@@ -33,8 +33,8 @@ export class PostItemComponent  implements OnInit {
 
   //Si pulsan el like lanzamos el evento al padre
   like(event:any){
-    if (this.post && this.post.id){
-      this.onLikePost.emit(this.post.id)
+    if (this.post && this.post.uuid){
+      this.onLikePost.emit(this.post.uuid)
     }  
     event.stopPropagation();
   }

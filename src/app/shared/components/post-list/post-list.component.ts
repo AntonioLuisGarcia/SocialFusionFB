@@ -18,7 +18,7 @@ export class PostListComponent  implements OnInit {
   @Output() editPost = new EventEmitter<PostExtended>();
   @Output() deletePost = new EventEmitter<string>();
   
-  @Output() likePost = new EventEmitter<number>();
+  @Output() likePost = new EventEmitter<string>();
   @Output() viewComments = new EventEmitter<string>();
   @Output() commentPost = new EventEmitter<Comment>();
 
@@ -26,8 +26,8 @@ export class PostListComponent  implements OnInit {
 
   ngOnInit() {}
 
-  onLikePost(postId: number) {
-    this.likePost.emit(postId);
+  onLikePost(postUuid: string) {
+    this.likePost.emit(postUuid);
   }
 
   onViewComments(postUuid: string | undefined) {

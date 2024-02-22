@@ -151,6 +151,22 @@ export class HomePage implements OnInit{
     });
   }
 
+    // Al hacer click en el botón de like, llamamos al servicio de likes, para crearlo o cambiar el estado
+    onLikePost(postUuid:string){
+      this.authService.me().subscribe((data) =>{
+        this.likeService.onLike(postUuid, data.uuid).subscribe({
+          next: (response) => {
+            console.log("Like hecho: " + response)
+            //this.postService.updatePostLike(postId,response.like)
+            //this.postService.fetchAndEmitPosts(this.me.id)
+          },
+          error: (error) => {
+            console.error('Error de like', error);
+          }
+        });
+      })
+    }
+
   /*
   constructor(
     private auth:AuthService,

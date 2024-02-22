@@ -15,6 +15,7 @@ import { CommentModalComponent } from 'src/app/shared/components/comment-modal/c
 import { Comment } from 'src/app/core/interfaces/comment';
 import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
 import { CommentFirebaseService } from 'src/app/core/services/api/firebase/comment-firebase.service';
+import { LikeFirebaseService } from 'src/app/core/services/api/firebase/like-firebase.service';
 
 @Component({
   selector: 'app-user-details',
@@ -29,7 +30,7 @@ export class UserDetailsPage implements OnInit {
   constructor(
     private postService:PostFirebaseService,
     private authService:AuthService,
-    private likeService: LikeService,
+    private likeService: LikeFirebaseService,
     private commentService: CommentFirebaseService,
     private modalController:ModalController,
   ) { }
@@ -54,9 +55,9 @@ export class UserDetailsPage implements OnInit {
   }
 
   // En caso de dar like a algun post 
-  onLikePost(postId: number) {
+  onLikePost(postUuid: string) {
     this.authService.me().subscribe((data) => {
-      this.likeService.onLike(postId, data.id).subscribe({
+      this.likeService.onLike(postUuid, data.id).subscribe({
         next: (response) => {/*
           // Actualizar el estado del like en el servicio
           this.postService.updatePostLike(postId, response.like);
