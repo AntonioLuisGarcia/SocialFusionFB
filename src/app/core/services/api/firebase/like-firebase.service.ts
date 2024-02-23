@@ -64,7 +64,7 @@ export class LikeFirebaseService {
     );
   }
 
-  public checkLike(postUuid: string, userUuid: string): Observable<boolean> {
+  public checkLike(postUuid: string | undefined, userUuid: string | undefined): Observable<boolean> {
     const conditions: FirebaseSearchCondition[] = [
       { field: 'postUuid', value: postUuid },
       { field: 'userUuid', value: userUuid }

@@ -55,8 +55,13 @@ export class HomePage implements OnInit{
       console.log('¿Le gustó al usuario?', result);
     });
 
+    this.postService.getAllPostWithLikes().subscribe((data =>{
+      console.log(data)
+      this.posts = data;
+    }))
+
     this.postService.getAllPost().subscribe((posts) => {
-      this.posts = posts;
+      //this.posts = posts;
       console.log('Posts actualizados:', this.posts);
     }, (error) => {
       console.error('Error al obtener posts:', error);

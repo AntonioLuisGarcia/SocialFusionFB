@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FirebaseDocument, FirebaseService } from '../../firebase/firebase.service';
-import { BehaviorSubject, Observable, concatMap, from, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, concatMap, forkJoin, from, map, of, switchMap } from 'rxjs';
 import { Post, PostExtended } from 'src/app/core/interfaces/post';
 import { AuthService } from '../../auth.service';
+import { LikeFirebaseService } from './like-firebase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class PostFirebaseService {
   constructor(
     private fireBaseService: FirebaseService,
     private authService: AuthService,
+    private likeFirebaseService: LikeFirebaseService,
     ) {
     
    }
@@ -96,6 +98,37 @@ export class PostFirebaseService {
     );
   }
 
+  getAllPostWithLikes(): Observable<PostExtended[]> {
+    return this.authService.me().pipe(
+      switchMap(user => {
+        if (user) {
+          const userUuid = user.uuid; // Ajusta según la estructura real de tu usuario
+          return this.getAllPost().pipe(
+            concatMap((posts: PostExtended[]) => {
+              const likeObservables: Observable<boolean>[] = [];
+
+              posts.forEach(post => {
+                const likeObservable = this.likeFirebaseService.checkLike(post.uuid, userUuid);
+                likeObservables.push(likeObservable);
+              });
+
+              return forkJoin(likeObservables).pipe(
+                map((likes: boolean[]) => {
+                  return posts.map((post, index) => ({
+                    ...post,
+                    likedByUser: likes[index] || false
+                  }));
+                })
+              );
+            })
+          );
+        } else {
+          // Manejo para el caso de que el usuario no esté autenticado
+          return of([]); // O puedes lanzar un error, dependiendo de tu lógica
+        }
+      })
+    );
+  }
   //Con este metodo borramos un post
   public deletePost(uuid:string): Observable<any> {
     return new Observable<void>(observer =>{
