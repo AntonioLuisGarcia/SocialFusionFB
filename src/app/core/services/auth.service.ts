@@ -33,9 +33,9 @@ export abstract class AuthService {
 
   public abstract searchUser(name: string): Observable<any>;
 
-  public abstract deleteUser(id: number): Observable<any>;
+  public abstract deleteUser(id: number | string): Observable<any>;
 
-  public abstract updateUser(id:number, userData:Object): Observable<any>;
+  public abstract updateUser(id:number | string, userData:Object): Observable<any>;
 
-  public abstract getUser(id:number): Observable<any>;
+  public abstract getUser(id:number | string): Observable<any>;
 }

@@ -1,5 +1,5 @@
 import { Observable, from, map } from 'rxjs';
-import { FirebaseService, FirebaseUserCredential } from '../../firebase/firebase.service';
+import { FirebaseDocument, FirebaseService, FirebaseUserCredential } from '../../firebase/firebase.service';
 import { AuthService } from '../../auth.service';
 import { UserCredentials } from 'src/app/core/interfaces/UserCredentials';
 import { User } from 'firebase/auth';
@@ -8,18 +8,54 @@ import { UserExtended } from 'src/app/core/interfaces/User';
 
 export class AuthFirebaseService extends AuthService{
 
-  public override searchUser(name: string): Observable<any> {
-    throw new Error('Method not implemented.');
+  public searchUser(name: string): Observable<UserExtended[]> {
+
+    const collectionName = 'users';
+    const field = 'username';
+
+    return from(this.firebaseSvc.getDocumentsBy(collectionName, field, name))
+      .pipe(
+        map((documents: FirebaseDocument[]) => {
+          return documents.map(doc => ({
+            id: 1,
+            password: "",
+            uuid: doc.id,
+            name: doc.data['name'],
+            email: doc.data['email'],
+            username: doc.data['username'],
+            img: doc.data['img'] ?? ''
+          }));
+        })
+      );
   }
-  public override deleteUser(id: number): Observable<any> {
-    throw new Error('Method not implemented.');
+
+public override deleteUser(uuid: string): Observable<any> {
+    const collectionName = 'users';
+    return from(this.firebaseSvc.deleteDocument(collectionName, uuid));
   }
-  public override updateUser(id: number, userData: Object): Observable<any> {
-    throw new Error('Method not implemented.');
+
+  public override updateUser(uuid: string, userData: any): Observable<any> {
+    const collectionName = 'users';
+    return from(this.firebaseSvc.updateDocument(collectionName, uuid, userData));
   }
-  public override getUser(id: number): Observable<any> {
-    throw new Error('Method not implemented.');
+
+  public override getUser(uuid: string): Observable<UserExtended> {
+    const collectionName = 'users';
+    return from(this.firebaseSvc.getDocument(collectionName, uuid)).pipe(
+      map((document: FirebaseDocument) => {
+        return {
+          id: 1,
+          password: "",
+          uuid: document.id,
+          name: document.data['name'],
+          email: document.data['email'],
+          username: document.data['username'],
+          img: document.data['img'] ?? ''
+        };
+      })
+    );
   }
+
 
   constructor(
     private firebaseSvc:FirebaseService
