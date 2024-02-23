@@ -25,8 +25,7 @@
   >
 </app-post-list>
   
-  <p>Hola</p>
-  <p>{{posts.description}}</p>
-
+<button (click)="takePicture()">Foto</button>
+<img *ngIf="imageElement" [src]="imageElement" alt="Foto">
 
 </ion-content>

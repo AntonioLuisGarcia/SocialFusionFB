@@ -25,6 +25,8 @@ import { AuthStrapiService } from 'src/app/core/services/api/strapi/auth-strapi.
 import { CommentFirebaseService } from 'src/app/core/services/api/firebase/comment-firebase.service';
 import { LikeFirebaseService } from 'src/app/core/services/api/firebase/like-firebase.service';
 
+import { Camera, CameraResultType } from '@capacitor/camera';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -166,6 +168,25 @@ export class HomePage implements OnInit{
         });
       })
     }
+
+    imageElement: string | undefined;
+    
+async takePicture () {
+  const image = await Camera.getPhoto({
+    quality: 90,
+    allowEditing: true,
+    resultType: CameraResultType.Uri
+  });
+
+  // image.webPath will contain a path that can be set as an image src.
+  // You can access the original file using image.path, which can be
+  // passed to the Filesystem API to read the raw data of the image,
+  // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+  var imageUrl = image.webPath;
+
+  // Can be set to the src of an image now
+  this.imageElement = imageUrl;
+};
 
   /*
   constructor(
