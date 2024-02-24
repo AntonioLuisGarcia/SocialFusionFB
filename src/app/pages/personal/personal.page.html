@@ -16,7 +16,10 @@
   [showEditDeleteButtons]="true"
   [posts]="userPosts"
   (deletePost)="onDeletePost($event)"
-  (editPost)="onEditPost($event)">
+  (editPost)="onEditPost($event)"
+  (likePost)="onLikePost($event)"
+  (commentPost)="onCommentPost($event)"
+  (viewComments)="onShowComments($event)">
 
   </app-post-list>
 

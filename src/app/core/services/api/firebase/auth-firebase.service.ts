@@ -1,5 +1,5 @@
 import { Observable, from, map } from 'rxjs';
-import { FirebaseDocument, FirebaseService, FirebaseUserCredential } from '../../firebase/firebase.service';
+import { FirebaseDocument, FirebaseSearchCondition, FirebaseService, FirebaseUserCredential } from '../../firebase/firebase.service';
 import { AuthService } from '../../auth.service';
 import { UserCredentials } from 'src/app/core/interfaces/UserCredentials';
 import { User } from 'firebase/auth';
@@ -8,25 +8,63 @@ import { UserExtended } from 'src/app/core/interfaces/User';
 
 export class AuthFirebaseService extends AuthService{
 
+  constructor(
+    private firebaseSvc:FirebaseService
+  ) { 
+    super();
+
+    this.firebaseSvc.isLogged$.subscribe(logged=>{
+      if(logged){
+        this.me().subscribe({
+          next:data=>{
+            this._user.next(data);
+            this._logged.next(true);
+          },
+          error:err=>{
+            console.log(err);
+          }
+        });
+      }
+      else{
+        this._logged.next(false);
+        this._user.next(null);
+      }
+    })
+  }
+
   public searchUser(name: string): Observable<UserExtended[]> {
-
     const collectionName = 'users';
-    const field = 'username';
-
-    return from(this.firebaseSvc.getDocumentsBy(collectionName, field, name))
+  
+    return from(this.firebaseSvc.getDocuments(collectionName))
       .pipe(
         map((documents: FirebaseDocument[]) => {
-          return documents.map(doc => ({
-            id: 1,
-            password: "",
-            uuid: doc.id,
-            name: doc.data['name'],
-            email: doc.data['email'],
-            username: doc.data['username'],
-            img: doc.data['img'] ?? ''
-          }));
+          return documents
+            .filter(doc => doc.data['username'].toLowerCase().includes(name.toLowerCase()))
+            .map(filteredDoc => ({
+              id: 1,
+              password: "",
+              uuid: filteredDoc.id,
+              name: filteredDoc.data['name'],
+              email: filteredDoc.data['email'],
+              username: filteredDoc.data['username'],
+              img: filteredDoc.data['img'] ?? ''
+            }));
         })
       );
+  }
+
+  public searchDocuments(collectionName: string, field: string, value: any): Observable<FirebaseDocument[]> {
+    return from(this.firebaseSvc.getDocumentsWithConditions(collectionName, [
+      { field, value: [''] },  // Añade un valor inicial para que sea un array
+      { field, value: value.toLowerCase() },
+      // También podrías considerar agregar variantes en minúsculas o mayúsculas según tus necesidades
+    ]))
+    .pipe(
+      map((documents: FirebaseDocument[]) => {
+        console.log('Documents:', documents);
+        return documents;
+      })
+    );
   }
 
 public override deleteUser(uuid: string): Observable<any> {
@@ -54,31 +92,6 @@ public override deleteUser(uuid: string): Observable<any> {
         };
       })
     );
-  }
-
-
-  constructor(
-    private firebaseSvc:FirebaseService
-  ) { 
-    super();
-
-    this.firebaseSvc.isLogged$.subscribe(logged=>{
-      if(logged){
-        this.me().subscribe({
-          next:data=>{
-            this._user.next(data);
-            this._logged.next(true);
-          },
-          error:err=>{
-            console.log(err);
-          }
-        });
-      }
-      else{
-        this._logged.next(false);
-        this._user.next(null);
-      }
-    })
   }
 
   public login(credentials:UserCredentials):Observable<any>{

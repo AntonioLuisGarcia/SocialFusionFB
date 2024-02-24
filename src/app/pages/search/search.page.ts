@@ -50,9 +50,9 @@ export class SearchPage implements OnInit {
   }
 
   // Cuando se hace click en un usuario, se navega a la página de detalles de ese usuario
-  userClicked(userId: number) {
+  userClicked(userUuid: string) {
     // Obtenemos el usuario por su id
-    this.authService.getUser(userId).subscribe( data =>{
+    this.authService.getUser(userUuid).subscribe( data =>{
       // Guardamos el usuario en la página 
       let navigationExtras: NavigationExtras = {
         state: {

@@ -9,14 +9,14 @@ import { User } from 'src/app/core/interfaces/User';
 export class UserListComponent  implements OnInit {
   
   @Input() users: User[] | undefined;
-  @Output() onClickUser = new EventEmitter<number>();
+  @Output() onClickUser = new EventEmitter<string>();
 
   constructor() { }
 
   ngOnInit() {}
 
   // Cuando se hace click en un usuario, se emite el evento con el id del usuario hacia el padre
-  userClicked(userId: number) {
-    this.onClickUser.emit(userId);
+  userClicked(userUuid: string) {
+    this.onClickUser.emit(userUuid);
   }
 }

@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class UserItemComponent  implements OnInit {
 
   @Input() user: any;
-  @Output() onClickUser = new EventEmitter<number>();
+  @Output() onClickUser = new EventEmitter<string>();
 
   constructor() { }
 
@@ -16,6 +16,6 @@ export class UserItemComponent  implements OnInit {
 
   // Cuando se hace click en un usuario, se emite el evento con el id del usuario hacia el padre
   userClicked() {
-    this.onClickUser.emit(this.user.id);
+    this.onClickUser.emit(this.user.uuid);
   }
 }

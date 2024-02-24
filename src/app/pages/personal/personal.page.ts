@@ -25,6 +25,8 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { dataURLtoBlob } from 'src/app/core/helpers/blob';
 import { map, switchMap } from 'rxjs';
 import { PostFirebaseService } from 'src/app/core/services/api/firebase/post-firebase.service';
+import { LikeFirebaseService } from 'src/app/core/services/api/firebase/like-firebase.service';
+import { CommentFirebaseService } from 'src/app/core/services/api/firebase/comment-firebase.service';
 
 @Component({
   selector: 'app-personal',
@@ -39,9 +41,9 @@ export class PersonalPage implements OnInit {
   constructor(
     private authService:AuthService,
     private postService:PostFirebaseService,
-    private likeService:LikeService,
+    private likeService:LikeFirebaseService,
     private mediaService: MediaService,
-    private commentService:CommentService,
+    private commentService:CommentFirebaseService,
     private modalController:ModalController,
     private router:Router,
   ) { }
@@ -51,7 +53,7 @@ export class PersonalPage implements OnInit {
     this.authService.me().subscribe(data => {      
       this.actualUser = data;
       if (this.actualUser.uuid) {
-        this.postService.getOwnPost(this.actualUser.uuid).subscribe(userPosts => {
+        this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
           this.userPosts = userPosts;
           console.log(this.userPosts);
         });
@@ -135,7 +137,7 @@ export class PersonalPage implements OnInit {
                 username: data.user.username
               };
               // Actualiza la información del usuario con la nueva imagen
-              this.updateUserProfile(user.id, userInfo);
+              this.updateUserProfile(user.uuid, userInfo);
             });
           });
         });
@@ -147,7 +149,7 @@ export class PersonalPage implements OnInit {
           username: data.user.username
         };
         // Actualiza la información del usuario sin la imagen
-        this.updateUserProfile(this.actualUser.id, userInfo);
+        this.updateUserProfile(this.actualUser.uuid, userInfo);
       } else {
         // Si la imagen no ha cambiado
         const userInfo: any = {
@@ -155,14 +157,15 @@ export class PersonalPage implements OnInit {
           username: data.user.username
         };
         // Actualiza solo el nombre y el nombre de usuario
-        this.updateUserProfile(this.actualUser.id, userInfo);
+        this.updateUserProfile(this.actualUser.uuid, userInfo);
       }
     }
   }
 
   // Actualiza el perfil del usuario
-  updateUserProfile(userId: number, userInfo: any) {
-    this.authService.updateUser(userId, userInfo).subscribe({
+  updateUserProfile(userUuid: string, userInfo: any) {
+    console.log(userInfo)
+    this.authService.updateUser(userUuid, userInfo).subscribe({
       next: (updatedUser: UserExtended) => {
         // Manejo adecuado tras la actualización exitosa
         console.log('Perfil actualizado correctamente.');
@@ -184,7 +187,7 @@ export class PersonalPage implements OnInit {
     if (data && data.confirm) {
       // Borramos al usuario de la BBDD por su id
       this.authService.me().subscribe( data =>{
-        this.authService.deleteUser(data.id).subscribe({
+        this.authService.deleteUser(data.uuid).subscribe({
           next: (response) => {
             // Navegamos al login
             console.log('Cuenta eliminada correctamente.');
@@ -197,8 +200,47 @@ export class PersonalPage implements OnInit {
         });
       })   
     }else{
-      console.log("No")
+      console.log("No se ha encontrado el uuid")
     }
+  }
+
+   // Cuando se hace click en el botón de comentar, llamamos al servicio de comentarios, para crearlo
+   onCommentPost(comment:Comment){
+    console.log(comment)
+    this.authService.me().subscribe((data) =>{
+        comment.user = data
+        this.commentService.createComment(comment).subscribe()  
+    })    
+  }
+
+    // Al hacer click en el botón de mostrar comentarios, llamamos al servicio de comentarios, para obtenerlos
+async onShowComments(postUuid: string) {
+  this.commentService.getCommentForPost(postUuid).subscribe(async (comments) => {
+    const modal = await this.modalController.create({
+      component: CommentModalComponent,
+      componentProps: {
+        'postUuid': postUuid,
+        'comments': comments // Pasamos los comentarios como propiedad al modal
+      }
+    });
+    await modal.present();
+  });
+}
+
+  // Al hacer click en el botón de like, llamamos al servicio de likes, para crearlo o cambiar el estado
+  onLikePost(postUuid:string){
+    this.authService.me().subscribe((data) =>{
+      this.likeService.onLike(postUuid, data.uuid).subscribe({
+        next: (response) => {
+          console.log("Like hecho: " + response)
+          //this.postService.updatePostLike(postId,response.like)
+          //this.postService.fetchAndEmitPosts(this.me.id)
+        },
+        error: (error) => {
+          console.error('Error de like', error);
+        }
+      });
+    })
   }
 
 

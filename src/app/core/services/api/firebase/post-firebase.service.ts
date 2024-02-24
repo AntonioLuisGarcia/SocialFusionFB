@@ -129,6 +129,44 @@ export class PostFirebaseService {
       })
     );
   }
+
+   // Método para obtener los posts de un usuario específico con el estado del like
+   public getPostsForUser(userUuid: string, viewerUuid: string): Observable<PostExtended[]> {
+    return from(this.fireBaseService.getDocumentsBy("posts", "user.uuid", userUuid)).pipe(
+      switchMap((docs: FirebaseDocument[]) => {
+        const postObservables: Observable<boolean>[] = [];
+
+        const posts: PostExtended[] = docs.map(doc => {
+          // Construir el objeto PostExtended
+          const post: PostExtended = {
+            id: 1,
+            uuid: doc.id,
+            description: doc.data['description'],
+            date: doc.data['date'],
+            user: doc.data['user'],
+            likedByUser: false // Inicialmente establecido como no gustado
+          };
+
+          // Crear un observable para verificar el estado del like
+          const likeObservable = this.likeFirebaseService.checkLike(post.uuid, viewerUuid);
+          postObservables.push(likeObservable);
+
+          return post;
+        });
+
+        // Combinar todos los observables de likes usando forkJoin
+        return forkJoin(postObservables).pipe(
+          map((likes: boolean[]) => {
+            return posts.map((post, index) => ({
+              ...post,
+              likedByUser: likes[index] || false
+            }));
+          })
+        );
+      })
+    );
+  }
+
   //Con este metodo borramos un post
   public deletePost(uuid:string): Observable<any> {
     return new Observable<void>(observer =>{
