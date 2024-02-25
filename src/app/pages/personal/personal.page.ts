@@ -73,22 +73,24 @@ export class PersonalPage implements OnInit {
     this.openEditModal(post);
   }
 
-  // Si se quiere editar un post, se abre el modal para cambiar los datos
-  async openEditModal(post: PostExtended) {
-    const modal = await this.modalController.create({
-      component: AddPostModalComponent,
-      componentProps: {
-        existingPost: post
-      }
-    });
-    await modal.present();
-  
-    const { data } = await modal.onDidDismiss();
-  
-    if (data && data.status === 'ok') {
-      const { description, image } = data.post;
-      const currentImage = post.img;
-  
+// Si se quiere editar un post, se abre el modal para cambiar los datos
+async openEditModal(post: PostExtended) {
+  const modal = await this.modalController.create({
+    component: AddPostModalComponent,
+    componentProps: {
+      existingPost: post
+    }
+  });
+  await modal.present();
+
+  const { data } = await modal.onDidDismiss();
+
+  if (data && data.status === 'ok') {
+    const { description, image } = data.post;
+    const currentImage = post.img;
+
+    if (image) {
+      // Si la imagen ha sido cambiada, se procede a subirla
       dataURLtoBlob(image, (blob: Blob) => {
         this.mediaService.upload(blob).pipe(
           switchMap((media: number[]) => {
@@ -98,16 +100,28 @@ export class PersonalPage implements OnInit {
               description,
               img: imageUrl || currentImage
             };
-            return this.postService.updatePost(updatedData, this.actualUser.uuid);
+            return this.postService.updatePost(updatedData);
           }),
           switchMap(() => this.postService.getOwnPost(this.actualUser.uuid))
         ).subscribe((updatedPosts) => {
           this.userPosts = updatedPosts;
         });
       });
-    }  
+    } else {
+      // Si no se cambió la imagen, se actualiza solo la descripción
+      const updatedData = {
+        ...post,
+        description
+      };
+
+      this.postService.updatePost(updatedData).pipe(
+        switchMap(() => this.postService.getOwnPost(this.actualUser.uuid))
+      ).subscribe((updatedPosts) => {
+        this.userPosts = updatedPosts;
+      });
+    }
   }
-  
+}
   // Si se quiere editar el perfil, se abre el modal para cambiar los datos
   async editProfile() {
     // Le pasamos la información del usuario al modal para que rellene los campos

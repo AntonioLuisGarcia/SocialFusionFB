@@ -8,7 +8,7 @@ export interface PostExtended {
     id: number;
     uuid?:string;
     description: string;
-    img?: string;
+    img?: string | any;
     date: string;
     user: {
       id: number;

@@ -50,11 +50,6 @@ export class HomePage implements OnInit{
 
   // Al iniciar la página, obtenemos el usuario actual y sus posts
   ngOnInit() {
-
-    this.likeService.checkLike("GBpRa5i5eVJL8rzzsgPm", "3aTcZrO9gPN5JYB0f7r4v5lYLyV2").subscribe((result: boolean) => {
-      console.log('¿Le gustó al usuario?', result);
-    });
-
     this.postService.getAllPostWithLikes().subscribe((data =>{
       console.log(data)
       this.posts = data;

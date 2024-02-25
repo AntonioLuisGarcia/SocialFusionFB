@@ -40,6 +40,7 @@ export class PostFirebaseService {
             description: doc.data['description'],
             date: doc.data['date'],
             user: doc.data['user'],
+            img: doc.data['img'],
           };
         });
         this._posts.next(posts);
@@ -89,6 +90,7 @@ export class PostFirebaseService {
             description: doc.data['description'],
             date: doc.data['date'],
             user: doc.data['user'],
+            img: doc.data['img'],
           };
         });
         this._posts.next(posts);
@@ -144,6 +146,7 @@ export class PostFirebaseService {
             description: doc.data['description'],
             date: doc.data['date'],
             user: doc.data['user'],
+            img: doc.data['img'],
             likedByUser: false // Inicialmente establecido como no gustado
           };
 
@@ -188,16 +191,13 @@ export class PostFirebaseService {
   }
 
   // Metodo para actualizar un post
-  public updatePost(post: any, uuid: string): Observable<PostExtended> {
+  public updatePost(post: any): Observable<PostExtended> {
     // Creamos un objeto con los datos que queremos actualizar
     return new Observable<any>(observer =>{
-      if(uuid){
-          this.fireBaseService.updateDocument("posts", uuid,{
-              description:post.description,
-              img:post.img
-          }).then(()=>{
+      if(post.uuid){
+          this.fireBaseService.updateDocument("posts", post.uuid , post).then(()=>{
               // Actualiza el lugar en la lista de places
-              const currentPlaces = this._posts.getValue().map(p => p.uuid === uuid ? post : p);
+              const currentPlaces = this._posts.getValue().map(p => p.uuid === post.uuid ? post : p);
               this._posts.next(currentPlaces);
               observer.next();
               observer.complete();

@@ -152,7 +152,7 @@ public override deleteUser(uuid: string): Observable<any> {
           name:data.data['name'],
           email:data.data['email'],
           username:data.data['username'],
-          img:data.data['img']??"",
+          img:data.data['image']??"",
           uuid:data.id
         }
     }));

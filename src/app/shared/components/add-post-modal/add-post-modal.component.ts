@@ -49,7 +49,7 @@ export class AddPostModalComponent  implements OnInit {
     if (this.existingPost) {
       this.postForm.patchValue({
         description: this.existingPost.description,
-        image: this.existingPost.img 
+        image: this.existingPost.img.url_small 
       });
     }
   }

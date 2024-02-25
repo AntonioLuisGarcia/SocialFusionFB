@@ -14,7 +14,7 @@
     <ion-card-title>{{ post?.user?.username }}</ion-card-title>
   </ion-card-header>
   
-  <img *ngIf="post?.img" [src]="post?.img" alt="Imagen del post" />
+  <img *ngIf="post?.img" [src]="post?.img?.url_small" alt="Imagen del post" />
   
   <ion-card-content>
     <ion-card-subtitle class="description">{{ post?.description }}</ion-card-subtitle>
