@@ -10,7 +10,16 @@
 <ion-content>
   <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
 
-    <app-image-selectable formControlName="image"></app-image-selectable>
+    <app-picture-selectable *ngIf="platform.is('mobile')" formControlName="photo"></app-picture-selectable>
+
+    <ion-button *ngIf="!platform.is( 'mobile' )" (click)="takePicture()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-button>
+    
+
+    <ion-item *ngIf="postForm.controls['image'].value">
+      <ion-img [src]="postForm.controls['image'].value"></ion-img>
+    </ion-item>
 
     <ion-item>
       <ion-label position="floating">{{"login.description" | translate}}</ion-label>

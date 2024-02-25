@@ -7,10 +7,16 @@
 <ion-content class="ion-padding">
   <form [formGroup]="profileForm">
 
-    <app-image-selectable
-    formControlName="img"
-    [img]="profileForm.controls['img'].value"
-    ></app-image-selectable>
+    <app-picture-selectable *ngIf="platform.is('mobile')" formControlName="photo"></app-picture-selectable>
+
+    <ion-button *ngIf="!platform.is( 'mobile' )" (click)="takePicture()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-button>
+    
+
+    <ion-item *ngIf="profileForm.controls['img'].value">
+      <ion-img [src]="profileForm.controls['img'].value"></ion-img>
+    </ion-item>
 
     <ion-item>
       <ion-label position="floating">{{"personal.username" | translate}}</ion-label>

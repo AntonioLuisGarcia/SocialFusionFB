@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { Camera, CameraResultType } from '@capacitor/camera';
+import { ModalController, Platform } from '@ionic/angular';
 import { UserBasicInfo } from 'src/app/core/interfaces/User';
 
 @Component({
@@ -12,10 +13,12 @@ export class EditProfileComponent  implements OnInit {
 
   @Input() user: UserBasicInfo | any;
   profileForm: FormGroup | any; // lo hago asi porque si lo inicializo en el constructor el user no se habrá cargado
-
+  image:string|undefined = "";
   constructor(
     private formBuilder: FormBuilder,
-    private modalController: ModalController
+    private modalController: ModalController,
+    public platform: Platform,
+
   ) {}
 
   ngOnInit() {
@@ -39,6 +42,18 @@ export class EditProfileComponent  implements OnInit {
   // Método para cerrar el modal sin hacer cambios
   dismissModal() {
     this.modalController.dismiss();
+  }
+
+  takePicture = async () => {
+    const photo = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.DataUrl
+    });
+  
+    this.image = photo.dataUrl;
+    this.profileForm.controls['img'].setValue(photo.dataUrl);
+
   }
 
 }

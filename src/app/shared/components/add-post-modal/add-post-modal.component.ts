@@ -1,10 +1,12 @@
 /// Angular
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { Camera, CameraResultType } from '@capacitor/camera';
+import { ModalController, Platform } from '@ionic/angular';
 
 /// Interfaces
 import { PostExtended } from 'src/app/core/interfaces/post';
+import { MediaService } from 'src/app/core/services/media.service';
 
 @Component({
   selector: 'app-add-post-modal',
@@ -15,16 +17,26 @@ export class AddPostModalComponent  implements OnInit {
 
   postForm: FormGroup;
   @Input() existingPost: PostExtended | null = null;
-
+  image:string|undefined = "";
 
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
+    public platform: Platform,
   ) {
     this.postForm = this.formBuilder.group({
       description: ['', Validators.required],
       image: [''],
     });
+  }
+
+  ngOnInit() {
+    if (this.existingPost) {
+      this.postForm.patchValue({
+        description: this.existingPost.description,
+        image: this.existingPost.img.url_small 
+      });
+    }
   }
 
   // Método para cerrar el modal
@@ -45,13 +57,16 @@ export class AddPostModalComponent  implements OnInit {
     }
   }
   
-  ngOnInit() {
-    if (this.existingPost) {
-      this.postForm.patchValue({
-        description: this.existingPost.description,
-        image: this.existingPost.img.url_small 
-      });
-    }
+  takePicture = async () => {
+    const photo = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.DataUrl
+    });
+  
+    this.image = photo.dataUrl;
+    this.postForm.controls['image'].setValue(photo.dataUrl);
+
   }
 
 }
