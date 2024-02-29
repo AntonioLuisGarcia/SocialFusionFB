@@ -39,39 +39,31 @@ export class UserDetailsPage implements OnInit {
   ngOnInit() {
     // Obtenemos el usuario de la página anterior, mediante el historial de navegación
     this.user = history.state.user;
-    this.authService.me().subscribe(data => {
-      this.postService.posts$.subscribe(posts => {
-        this.posts = posts;
-      });
-      // Cogemos los post de ese usuario y los likes del usuario actual, y los ordenamos por fecha
-      /*this.postService.getPostsByUserId(data.id, this.user.id).subscribe(posts => {
-        this.posts = posts.sort((a, b) => {
-          let dateA = new Date(a.date);
-          let dateB = new Date(b.date);
-          return dateB.getTime() - dateA.getTime();
+
+    this.authService.me().subscribe(data => {      
+      if (data.uuid) {
+        this.postService.getPostsForUser(this.user.uuid, data.uuid).subscribe(userPosts => {
+          this.posts = userPosts;
+          console.log(userPosts);
         });
-      });*/
-    });  
+      }
+    });
   }
 
   // En caso de dar like a algun post 
   onLikePost(postUuid: string) {
     this.authService.me().subscribe((data) => {
-      this.likeService.onLike(postUuid, data.id).subscribe({
-        next: (response) => {/*
-          // Actualizar el estado del like en el servicio
-          this.postService.updatePostLike(postId, response.like);
-          
-          // actualizamos los cambios
-          this.postService.getPostsByUserId(data.id, this.user.id).subscribe(
-            updatedPosts => {
-              this.posts = updatedPosts;
+      this.likeService.onLike(postUuid, data.uuid).subscribe({
+        next: (response) => {
+          this.authService.me().subscribe(data => {      
+            if (data.uuid) {
+              this.postService.getPostsForUser(this.user.uuid, data.uuid).subscribe(userPosts => {
+                this.posts = userPosts;
+                console.log(userPosts);
+              });
             }
-          );
-        },
-        error: (error) => {
-          console.error('Error al cambiar el estado del like', error);
-        */}
+          });
+        }
       })
     });
   }
@@ -79,8 +71,8 @@ export class UserDetailsPage implements OnInit {
   // Si se comenta un post
   onCommentPost(comment:Comment){
     this.authService.me().subscribe((data) =>{
-      // Con el mensaje y el id del usuario, creamos el comentario, junto con el id del post
-        comment.userId = data.id
+      // Con el mensaje y el uuid del usuario, creamos el comentario, junto con el uuid del post
+        comment.user = data
         this.commentService.createComment(comment).subscribe()  
     })    
   }

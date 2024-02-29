@@ -64,7 +64,17 @@ export class PersonalPage implements OnInit {
     // Si se quiere borrar un post
     onDeletePost(uuid: string) {
       console.log(uuid);
-      this.postService.deletePost(uuid).subscribe()
+      this.postService.deletePost(uuid).subscribe(() =>{
+        this.authService.me().subscribe(data => {      
+          this.actualUser = data;
+          if (this.actualUser.uuid) {
+            this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
+              this.userPosts = userPosts;
+              console.log(this.userPosts);
+            });
+          }
+        });
+      })
     }
 
     
@@ -104,7 +114,15 @@ async openEditModal(post: PostExtended) {
           }),
           switchMap(() => this.postService.getOwnPost(this.actualUser.uuid))
         ).subscribe((updatedPosts) => {
-          this.userPosts = updatedPosts;
+          this.authService.me().subscribe(data => {      
+            this.actualUser = data;
+            if (this.actualUser.uuid) {
+              this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
+                this.userPosts = userPosts;
+                console.log(this.userPosts);
+              });
+            }
+          });
         });
       });
     } else {
@@ -117,7 +135,15 @@ async openEditModal(post: PostExtended) {
       this.postService.updatePost(updatedData).pipe(
         switchMap(() => this.postService.getOwnPost(this.actualUser.uuid))
       ).subscribe((updatedPosts) => {
-        this.userPosts = updatedPosts;
+        this.authService.me().subscribe(data => {      
+          this.actualUser = data;
+          if (this.actualUser.uuid) {
+            this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
+              this.userPosts = userPosts;
+              console.log(this.userPosts);
+            });
+          }
+        });
       });
     }
   }
@@ -151,7 +177,7 @@ async openEditModal(post: PostExtended) {
                 username: data.user.username
               };
               // Actualiza la información del usuario con la nueva imagen
-              this.updateUserProfile(user.uuid, userInfo);
+              this.updateUserProfile(user.uuid, userInfo)
             });
           });
         });
@@ -183,6 +209,11 @@ async openEditModal(post: PostExtended) {
       next: (updatedUser: UserExtended) => {
         // Manejo adecuado tras la actualización exitosa
         console.log('Perfil actualizado correctamente.');
+
+        this.authService.me().subscribe(data => {      
+          this.actualUser = data;
+        });
+
       },
       error: (error) => {
         console.error('Error al actualizar el perfil', error);
@@ -247,8 +278,14 @@ async onShowComments(postUuid: string) {
       this.likeService.onLike(postUuid, data.uuid).subscribe({
         next: (response) => {
           console.log("Like hecho: " + response)
-          //this.postService.updatePostLike(postId,response.like)
-          //this.postService.fetchAndEmitPosts(this.me.id)
+          this.authService.me().subscribe(data => {      
+            this.actualUser = data;
+            if (this.actualUser.uuid) {
+              this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
+                this.userPosts = userPosts;
+                console.log(this.userPosts);
+              });
+            }})
         },
         error: (error) => {
           console.error('Error de like', error);
