@@ -7,9 +7,7 @@
 <ion-content class="ion-padding">
   <form [formGroup]="profileForm">
 
-    <app-picture-selectable *ngIf="platform.is('mobile')" formControlName="photo"></app-picture-selectable>
-
-    <ion-button *ngIf="!platform.is( 'mobile' )" (click)="takePicture()">
+    <ion-button (click)="takePicture()">
       <ion-icon name="camera"></ion-icon>
     </ion-button>
     
