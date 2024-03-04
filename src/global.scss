@@ -29,3 +29,18 @@
 .highlight ion-label, .highlight ion-icon {
   color:#3a5ce2 !important;
 }
+
+/* Colores personalizados */
+$color-primary: #3a5ce2;
+$color-secondary: #00bcd4;
+$color-tertiary: #ff5722;
+
+/* Aplicar colores personalizados a Ionic */
+ion-label {
+  color: $color-primary !important;
+}
+
+/* Otros estilos globales */
+body {
+  background-color: #f4f4f4;
+}

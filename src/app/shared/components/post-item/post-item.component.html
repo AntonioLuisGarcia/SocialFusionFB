@@ -24,14 +24,14 @@
       <ion-icon
         class="like-icon"
         name="thumbs-up"
-        [ngStyle]="{'color': post?.likedByUser ? 'blue' : 'black'}"
+        [ngStyle]="{'color': post?.likedByUser ? 'var(--ion-color-primary)' : 'black'}"
         (click)="like($event)"
         ></ion-icon>
   
       <form class="comment-form" (ngSubmit)="comment($event, commentInput.value)">
         <input type="text" #commentInput placeholder="{{'home.commentType' | translate}}">
-        <button type="submit" ion-button small>
-          <ion-icon name="send"></ion-icon>
+        <button type="submit" ion-button small class="ion-color-primary">
+          <ion-icon name="send"  color='var(--ion-color-primary)'></ion-icon>
         </button>
       </form>
     </div>

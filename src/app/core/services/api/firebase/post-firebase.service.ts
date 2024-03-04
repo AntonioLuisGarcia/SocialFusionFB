@@ -197,8 +197,8 @@ export class PostFirebaseService {
       if(post.uuid){
           this.fireBaseService.updateDocument("posts", post.uuid , post).then(()=>{
               // Actualiza el lugar en la lista de places
-              const currentPlaces = this._posts.getValue().map(p => p.uuid === post.uuid ? post : p);
-              this._posts.next(currentPlaces);
+              const currentPosts = this._posts.getValue().map(p => p.uuid === post.uuid ? post : p);
+              this._posts.next(currentPosts);
               observer.next();
               observer.complete();
           })

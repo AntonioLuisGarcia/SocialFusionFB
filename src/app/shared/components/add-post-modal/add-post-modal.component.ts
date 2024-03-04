@@ -32,9 +32,9 @@ export class AddPostModalComponent  implements OnInit {
 
   ngOnInit() {
     if (this.existingPost) {
-      this.postForm.patchValue({
-        description: this.existingPost.description,
-        image: this.existingPost.img.url_small 
+      this.postForm = this.formBuilder.group({
+        description: [this.existingPost?.description || null, Validators.required],
+        image: [this.existingPost?.img?.url_small || null],
       });
     }
   }
