@@ -236,12 +236,20 @@ export class FirebaseService {
   }
 
 
-  public subscribeToCollection(collectionName:string, subject: BehaviorSubject<any[]>, mapFunction:(el:DocumentData)=>any):Unsubscribe | null{
-    if(!this._db)
-        return null;
+  public subscribeToCollection(collectionName: string, subject: BehaviorSubject<any[]>, mapFunction: (el: DocumentData) => any): Unsubscribe | null {
+    if (!this._db)
+      return null;
+  
     return onSnapshot(collection(this._db, collectionName), (snapshot) => {
-      subject.next(snapshot.docs.map<any>(doc=>mapFunction(doc)));
-      }, error=>{});
+      const mappedData = snapshot.docs.map<any>((doc) => {
+        console.log(doc.data()); // Imprimir el contenido de doc.data() para depurar
+        return mapFunction(doc.data());
+      });
+  
+      subject.next(mappedData);
+    }, error => {
+      // Manejar errores según tus necesidades
+    });
   }
   
   public signOut(signInAnon:boolean=false):Promise<void> {

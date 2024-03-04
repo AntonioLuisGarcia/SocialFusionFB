@@ -50,10 +50,16 @@ export class HomePage implements OnInit{
 
   // Al iniciar la página, obtenemos el usuario actual y sus posts
   ngOnInit() {
-    this.postService.getAllPostWithLikes().subscribe((data =>{
-      console.log(data)
-      this.posts = data;
-    }))
+
+    this.postService.posts$.subscribe({
+      next:(data)=>{    
+      //this.postService.getAllPostWithLikes().subscribe((data =>{
+        this.posts = data
+        console.log(data)
+        //this.posts = data;
+      //}))
+    }})
+
   }
 
    // Al hacer click en el botón de añadir post, llamamos al modal de añadir post
