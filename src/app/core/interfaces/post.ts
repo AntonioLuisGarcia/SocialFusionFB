@@ -9,7 +9,7 @@ export interface PostExtended {
     uuid?:string;
     description: string;
     img?: string | any;
-    date: string;
+    date: string | any;
     user: {
       id: number;
       uuid?:string;
@@ -17,4 +17,5 @@ export interface PostExtended {
       name?: string;
     };
     likedByUser?: boolean;
+    orderDate?: Date | any;
   }

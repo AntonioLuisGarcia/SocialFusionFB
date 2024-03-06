@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslationService } from 'src/app/core/services/translation.service';
+import { HoverFlagsDirective } from 'src/app/shared/directives/hover-flags.directive';
+
 
 @Component({
   selector: 'app-header',

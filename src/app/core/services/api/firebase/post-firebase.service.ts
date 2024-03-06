@@ -27,20 +27,30 @@ export class PostFirebaseService {
     return from(this.fireBaseService.getDocuments("posts")).pipe(
       switchMap((docs: FirebaseDocument[]) => {
         const posts: PostExtended[] = docs.map(doc => {
+          const dateString = doc.data['date'];
+          console.log(dateString);
+          const dateObject = this.mapmDate(dateString);
+          console.log(dateObject)
           return {
             id: 1,
             uuid: doc.id,
             description: doc.data['description'],
-            date: doc.data['date'],
+            orderDate:dateObject,
+            date: dateString, // Utiliza el objeto de fecha transformado
             user: doc.data['user'],
             img: doc.data['img'],
           };
         });
-        this._posts.next(posts);
-        return of(posts);
+  
+        // Ordena los posts por fecha antes de actualizar el estado
+        const sortedPosts = posts.sort((a, b) => b.orderDate.getTime() - a.orderDate.getTime());
+        console.log(sortedPosts)
+        this._posts.next(sortedPosts);
+        return of(sortedPosts);
       })
     );
   }
+  
 
   public createPost(post: PostExtended): Observable<PostExtended[]>{
     return new Observable<PostExtended[]>(observer => {
@@ -67,10 +77,21 @@ export class PostFirebaseService {
   //posible helper
   transformDate(): string {
     const date = new Date();
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque getMonth() retorna 0-11
+    const month = date.getDate().toString().padStart(2, '0');
+    const day = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque getMonth() retorna 0-11
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
+  }
+
+  mapmDate(dateStringOrDate?: string | Date): Date {
+    if (typeof dateStringOrDate === 'string') {
+      const [month, day, year] = dateStringOrDate.split('-').map(Number);
+      return new Date(year,day-1,  month,);
+    } else if (dateStringOrDate instanceof Date) {
+      return dateStringOrDate;
+    } else {
+      return new Date();
+    }
   }
 
   public getOwnPost(uuid:string):Observable<PostExtended[]>{
@@ -206,9 +227,11 @@ export class PostFirebaseService {
 
   public mapPost(doc: DocumentData):PostExtended{
     console.log(doc)
+    const docWithId = doc as { id: string };
+    console.log(docWithId)
       return{
         id: 1,
-            uuid: doc['id'],
+            uuid: docWithId.id,
             description: doc['description'],
             date: doc['date'],
             user: doc['user'],

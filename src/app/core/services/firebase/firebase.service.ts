@@ -243,7 +243,10 @@ export class FirebaseService {
     return onSnapshot(collection(this._db, collectionName), (snapshot) => {
       const mappedData = snapshot.docs.map<any>((doc) => {
         console.log(doc.data()); // Imprimir el contenido de doc.data() para depurar
-        return mapFunction(doc.data());
+        return mapFunction({
+          id: doc.id,
+          ...doc.data(),
+        });
       });
   
       subject.next(mappedData);

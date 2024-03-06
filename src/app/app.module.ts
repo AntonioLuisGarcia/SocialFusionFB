@@ -24,6 +24,7 @@ import { FirebaseService } from './core/services/firebase/firebase.service';
 import { AuthFirebaseService } from './core/services/api/firebase/auth-firebase.service';
 import { environment } from 'src/environments/environment';
 import { MediaFirebaseService } from './core/services/api/firebase/media-firebase.service';
+import { HoverFlagsDirective } from './shared/directives/hover-flags.directive';
 
 export function httpProviderFactory(
   http:HttpClient,
@@ -66,6 +67,7 @@ export function MediaServiceFactory(
     declarations: [
         AppComponent,
         HoverColorDirective,
+        HoverFlagsDirective,
     ],
     providers: [
         {
