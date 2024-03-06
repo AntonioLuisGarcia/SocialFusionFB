@@ -99,8 +99,8 @@ async openEditModal(post: PostExtended) {
     const { description, image } = data.post;
     const currentImage = post.img;
 
-    if (image) {
-      // Si la imagen ha sido cambiada, se procede a subirla
+    if (image && image.length > 0 && image.startsWith('data:image')) {
+      // Si la imagen ha sido cambiada y es del tipo data:image, se procede a subirla
       dataURLtoBlob(image, (blob: Blob) => {
         this.mediaService.upload(blob).pipe(
           switchMap((media: number[]) => {
@@ -114,7 +114,7 @@ async openEditModal(post: PostExtended) {
           }),
           switchMap(() => this.postService.getOwnPost(this.actualUser.uuid))
         ).subscribe((updatedPosts) => {
-          this.authService.me().subscribe(data => {      
+          this.authService.me().subscribe(data => {
             this.actualUser = data;
             if (this.actualUser.uuid) {
               this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
@@ -126,7 +126,7 @@ async openEditModal(post: PostExtended) {
         });
       });
     } else {
-      // Si no se cambió la imagen, se actualiza solo la descripción
+      // Si no se cambió la imagen o no es del tipo data:image, se actualiza solo la descripción
       const updatedData = {
         ...post,
         description
@@ -135,7 +135,7 @@ async openEditModal(post: PostExtended) {
       this.postService.updatePost(updatedData).pipe(
         switchMap(() => this.postService.getOwnPost(this.actualUser.uuid))
       ).subscribe((updatedPosts) => {
-        this.authService.me().subscribe(data => {      
+        this.authService.me().subscribe(data => {
           this.actualUser = data;
           if (this.actualUser.uuid) {
             this.postService.getPostsForUser(this.actualUser.uuid, this.actualUser.uuid).subscribe(userPosts => {
@@ -148,6 +148,8 @@ async openEditModal(post: PostExtended) {
     }
   }
 }
+
+
   // Si se quiere editar el perfil, se abre el modal para cambiar los datos
   async editProfile() {
     // Le pasamos la información del usuario al modal para que rellene los campos
@@ -157,14 +159,14 @@ async openEditModal(post: PostExtended) {
         user: this.actualUser
       }
     });
-
+  
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    // Si hay datos y se han confirmaso
+    // Si hay datos y se han confirmado
     if (data && data.status === 'ok') {
-      // Verifica si hay una imagen nueva o si la imagen se ha eliminado
-      if (data.user.img && data.user.img !== this.actualUser.img) {
-        // Si hay una imagen nueva y es diferente a la actual
+      // Verifica si hay una imagen nueva y si la imagen es del tipo data:image
+      if (data.user.img && data.user.img !== this.actualUser.img && data.user.img.startsWith('data:image')) {
+        // Si hay una imagen nueva y es diferente a la actual y es del tipo data:image
         dataURLtoBlob(data.user.img, (blob: Blob) => {
           this.mediaService.upload(blob).subscribe((media: number[]) => {
             // Obtener detalles del usuario
@@ -177,7 +179,7 @@ async openEditModal(post: PostExtended) {
                 username: data.user.username
               };
               // Actualiza la información del usuario con la nueva imagen
-              this.updateUserProfile(user.uuid, userInfo)
+              this.updateUserProfile(user.uuid, userInfo);
             });
           });
         });
@@ -191,7 +193,7 @@ async openEditModal(post: PostExtended) {
         // Actualiza la información del usuario sin la imagen
         this.updateUserProfile(this.actualUser.uuid, userInfo);
       } else {
-        // Si la imagen no ha cambiado
+        // Si la imagen no ha cambiado o no es del tipo data:image
         const userInfo: any = {
           name: data.user.name,
           username: data.user.username
@@ -201,6 +203,7 @@ async openEditModal(post: PostExtended) {
       }
     }
   }
+  
 
   // Actualiza el perfil del usuario
   updateUserProfile(userUuid: string, userInfo: any) {

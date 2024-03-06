@@ -26,7 +26,7 @@ export class EditProfileComponent  implements OnInit {
     this.profileForm = this.formBuilder.group({
       username: [this.user?.username, Validators.required],
       name: [this.user?.name, Validators.required],
-      img: [this.user?.img]
+      img: [this.user?.img?.url_small]
       // Agrega aquí otros campos que necesites
     });
   }
