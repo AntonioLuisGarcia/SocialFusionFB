@@ -81,6 +81,7 @@ public override deleteUser(uuid: string): Observable<any> {
     const collectionName = 'users';
     return from(this.firebaseSvc.getDocument(collectionName, uuid)).pipe(
       map((document: FirebaseDocument) => {
+        console.log(document)
         return {
           id: 1,
           password: "",
@@ -88,7 +89,7 @@ public override deleteUser(uuid: string): Observable<any> {
           name: document.data['name'],
           email: document.data['email'],
           username: document.data['username'],
-          img: document.data['img'] ?? ''
+          img: document.data['image'] ?? ''
         };
       })
     );
