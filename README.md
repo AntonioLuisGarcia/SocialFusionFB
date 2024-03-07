@@ -20,7 +20,7 @@ About: Información del creador de la página
 ![Base de datos](/src/assets/images/bbdd.png)
 
 ## Video de presentación:
-[Video de presentación](https://youtu.be/36h2kJG6l7A?si=KfGlpPYuhnMDSw1h)
+[Video de presentación](https://youtu.be/wCALoeJKYT8)
 
 ## URL  de la app:
 https://main--lovely-muffin-7f5b5e.netlify.app/home
