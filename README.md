@@ -23,4 +23,4 @@ About: Información del creador de la página
 [Video de presentación](https://youtu.be/36h2kJG6l7A?si=KfGlpPYuhnMDSw1h)
 
 ## URL  de la app:
-https://master--dashing-gnome-74121e.netlify.app
+https://main--lovely-muffin-7f5b5e.netlify.app/home
